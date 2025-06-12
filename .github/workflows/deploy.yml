@@ -37,6 +37,23 @@ jobs:
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
 
+      - name: Ensure App Runner service is running
+        env:
+          SERVICE_ARN: ${{ secrets.APP_RUNNER_SERVICE_ARN }}
+        run: |
+          SERVICE_STATUS=$(aws apprunner describe-service --service-arn $SERVICE_ARN --query 'Service.Status' --output text)
+          echo "Current service status: $SERVICE_STATUS"
+          
+          if [ "$SERVICE_STATUS" != "RUNNING" ]; then
+            echo "Service is not in RUNNING state. Attempting to restart..."
+            aws apprunner update-service --service-arn $SERVICE_ARN --auto-deployments-enabled
+            echo "Service restart initiated. Waiting for it to reach RUNNING state..."
+            aws apprunner wait service-running --service-arn $SERVICE_ARN
+            echo "Service is now in RUNNING state."
+          else
+            echo "Service is already in RUNNING state."
+          fi
+
       - name: Deploy to App Runner
         env:
           SERVICE_ARN: ${{ secrets.APP_RUNNER_SERVICE_ARN }}
