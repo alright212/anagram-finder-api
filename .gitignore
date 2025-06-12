@@ -19,6 +19,17 @@
 /storage/*.key
 /storage/pail
 /vendor
+
+# Development and deployment utility scripts (not part of the actual project)
+delayed_push.sh
+execute_incremental_commits.sh
+INCREMENTAL_COMMIT_PLAN.md
+QUICK_START.md
+run_with_caffeinate.sh
+run_in_background.sh
+check_progress.sh
+incremental_commits.log
+incremental_commits.pid
 Homestead.json
 Homestead.yaml
 Thumbs.db
