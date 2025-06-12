@@ -22,3 +22,11 @@ run:
       value: production
     - name: APP_DEBUG
       value: "false"
+  # Add proper health check configuration
+  health_check:
+    protocol: http
+    path: /health
+    interval: 30
+    timeout: 5
+    healthy_threshold: 2
+    unhealthy_threshold: 3
