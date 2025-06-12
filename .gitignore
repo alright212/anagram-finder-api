@@ -33,3 +33,13 @@ incremental_commits.pid
 Homestead.json
 Homestead.yaml
 Thumbs.db
+AWS_DEPLOYMENT_GUIDE.md
+deploy-to-aws.sh
+DEPLOYMENT_CHECKLIST.md
+monitor-deployment.sh
+monitor-v2.sh
+rebuild-image.sh
+simple-monitor.sh
+test_i18n.sh
+test_unicode.php
+test-local.sh

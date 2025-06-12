@@ -1,0 +1,70 @@
+# Optimized Dockerfile for faster builds and better caching
+FROM php:8.2-apache
+
+# Install system dependencies in one layer for better caching
+RUN apt-get update && apt-get install -y \
+    git \
+    curl \
+    libpng-dev \
+    libonig-dev \
+    libxml2-dev \
+    libicu-dev \
+    zip \
+    unzip \
+    sqlite3 \
+    libsqlite3-dev \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install PHP extensions (this step takes the longest, so it's early for caching)
+RUN docker-php-ext-install -j$(nproc) \
+    pdo_mysql \
+    pdo_sqlite \
+    mbstring \
+    exif \
+    pcntl \
+    bcmath \
+    gd \
+    intl
+
+# Install Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# Enable Apache modules
+RUN a2enmod rewrite
+
+# Set working directory
+WORKDIR /var/www/html
+
+# Copy composer files first for dependency caching
+COPY composer.json composer.lock ./
+
+# Install PHP dependencies (this layer will be cached if composer files don't change)
+RUN composer install --no-dev --optimize-autoloader --no-scripts
+
+# Copy application files
+COPY . /var/www/html
+
+# Run post-install scripts
+RUN composer run-script post-autoload-dump
+
+# Copy Apache configuration
+COPY apache-config.conf /etc/apache2/sites-available/000-default.conf
+
+# Create database directory and file with proper permissions
+RUN mkdir -p /var/www/html/database \
+    && touch /var/www/html/database/database.sqlite \
+    && chown -R www-data:www-data /var/www/html \
+    && chmod -R 755 /var/www/html/storage \
+    && chmod -R 755 /var/www/html/bootstrap/cache \
+    && chmod 664 /var/www/html/database/database.sqlite
+
+# Expose port 80
+EXPOSE 80
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=60s --retries=3 \
+    CMD curl -f http://localhost/ || exit 1
+
+# Start Apache
+CMD ["apache2-foreground"]
