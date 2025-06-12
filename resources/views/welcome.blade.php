@@ -150,7 +150,7 @@
             
             <div class="api-links">
                 <a href="/api/documentation" class="btn btn-primary">📖 Interactive API Docs</a>
-                <a href="/docs/api-docs.json" class="btn btn-secondary">📄 OpenAPI JSON</a>
+                <a href="/openapi.json" class="btn btn-secondary">📄 OpenAPI JSON</a>
             </div>
 
             <div class="stats">

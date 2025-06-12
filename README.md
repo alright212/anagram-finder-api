@@ -365,8 +365,72 @@ The Swagger configuration can be customized in:
 - `app/Http/Controllers/Controller.php` - Base API information
 - Controller methods - Individual endpoint documentation
 
+## 🚀 Deployment
+
+### Heroku Deployment (Recommended)
+
+[![Deploy to Heroku](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
+
+The easiest way to deploy this API is using Heroku:
+
+#### One-Click Deploy
+Click the "Deploy to Heroku" button above for instant deployment with pre-configured settings.
+
+#### Quick Deploy Script
+```bash
+# Run the automated deployment script
+./deploy-to-heroku.sh
+```
+
+#### Manual Deploy
+```bash
+# Login to Heroku
+heroku login
+
+# Create app
+heroku create your-anagram-api
+
+# Set buildpack
+heroku buildpacks:set heroku/php
+
+# Set environment variables
+heroku config:set APP_KEY=$(php artisan key:generate --show)
+heroku config:set APP_ENV=production
+heroku config:set APP_DEBUG=false
+
+# Deploy
+git push heroku main
+
+# Run migrations
+heroku run php artisan migrate --force
+```
+
+For detailed deployment instructions, see [HEROKU_DEPLOYMENT_GUIDE.md](HEROKU_DEPLOYMENT_GUIDE.md).
+
+### Docker Deployment
+
+For containerized deployment:
+
+```bash
+# Build and run locally
+docker build -t anagram-api .
+docker run -p 8000:80 anagram-api
+
+# Or use Docker Compose for local production testing
+docker-compose -f docker-compose.local-prod.yml up
+```
+
+### Environment Variables
+
+Required environment variables:
+- `APP_KEY` - Laravel application key
+- `APP_ENV` - Environment (production/staging/local)
+- `APP_DEBUG` - Debug mode (false for production)
+- `DB_CONNECTION` - Database connection (sqlite/mysql/pgsql)
+
+See `.env.example` and `.env.heroku` for complete configuration examples.
+
 ---
 
 **Built with ❤️ for Estonian language processing and Unicode excellence**
-# Deployment triggered on Thu Jun 12 16:10:10 EEST 2025
 

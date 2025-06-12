@@ -389,6 +389,242 @@
                 }
             }
         },
+        "/api/v1/locale/info": {
+            "get": {
+                "tags": [
+                    "Locale"
+                ],
+                "summary": "Get locale information",
+                "description": "Returns information about supported locales and current locale settings",
+                "operationId": "getLocaleInfo",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "current_locale": {
+                                                    "type": "string",
+                                                    "example": "en"
+                                                },
+                                                "supported_locales": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    },
+                                                    "example": [
+                                                        "en",
+                                                        "et",
+                                                        "de",
+                                                        "fr"
+                                                    ]
+                                                },
+                                                "default_locale": {
+                                                    "type": "string",
+                                                    "example": "en"
+                                                },
+                                                "locale_detection_methods": {
+                                                    "properties": {
+                                                        "query_parameter": {
+                                                            "type": "string",
+                                                            "example": "lang or locale"
+                                                        },
+                                                        "custom_header": {
+                                                            "type": "string",
+                                                            "example": "X-Locale"
+                                                        },
+                                                        "accept_language": {
+                                                            "type": "string",
+                                                            "example": "Accept-Language header"
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/locale/translations/{namespace}": {
+            "get": {
+                "tags": [
+                    "Locale"
+                ],
+                "summary": "Get translations for namespace",
+                "description": "Returns all translations for a specific namespace in the current locale",
+                "operationId": "getTranslations",
+                "parameters": [
+                    {
+                        "name": "namespace",
+                        "in": "path",
+                        "description": "Translation namespace (e.g., api, validation)",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "api"
+                        }
+                    },
+                    {
+                        "name": "locale",
+                        "in": "query",
+                        "description": "Override locale for this request",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "et"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "namespace": {
+                                                    "type": "string",
+                                                    "example": "api"
+                                                },
+                                                "locale": {
+                                                    "type": "string",
+                                                    "example": "en"
+                                                },
+                                                "translations": {
+                                                    "description": "Translation key-value pairs",
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Namespace not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "properties": {
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "Translation namespace not found"
+                                                },
+                                                "code": {
+                                                    "type": "string",
+                                                    "example": "NAMESPACE_NOT_FOUND"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/locale/preference": {
+            "post": {
+                "tags": [
+                    "Locale"
+                ],
+                "summary": "Set locale preference",
+                "description": "Set the preferred locale for future requests (requires session/auth implementation)",
+                "operationId": "setLocalePreference",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "locale": {
+                                        "description": "Preferred locale code",
+                                        "type": "string",
+                                        "example": "et"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Preference set successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Locale preference updated"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "locale": {
+                                                    "type": "string",
+                                                    "example": "et"
+                                                },
+                                                "previous_locale": {
+                                                    "type": "string",
+                                                    "example": "en"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid locale",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "properties": {
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "Unsupported locale"
+                                                },
+                                                "code": {
+                                                    "type": "string",
+                                                    "example": "INVALID_LOCALE"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/wordbase/import": {
             "post": {
                 "tags": [
@@ -584,6 +820,10 @@
         {
             "name": "Advanced Wordbase",
             "description": "Advanced operations for managing the word database with Unicode optimization"
+        },
+        {
+            "name": "Locale",
+            "description": "Internationalization and locale management operations"
         }
     ]
 }

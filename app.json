@@ -1,0 +1,61 @@
+{
+    "name": "Estonian Anagram Finder API",
+    "description": "A sophisticated Laravel-based REST API for finding anagrams with advanced Unicode support, optimized for Estonian language characters.",
+    "keywords": [
+        "laravel",
+        "php",
+        "api",
+        "anagram",
+        "estonian",
+        "unicode",
+        "rest"
+    ],
+    "website": "https://github.com/your-username/anagram-finder-api",
+    "repository": "https://github.com/your-username/anagram-finder-api",
+    "logo": "https://laravel.com/img/logotype.min.svg",
+    "success_url": "/api/documentation",
+    "env": {
+        "APP_KEY": {
+            "description": "Laravel application key (will be generated automatically)",
+            "generator": "secret"
+        },
+        "APP_ENV": {
+            "description": "Application environment",
+            "value": "production"
+        },
+        "APP_DEBUG": {
+            "description": "Debug mode",
+            "value": "false"
+        },
+        "DB_CONNECTION": {
+            "description": "Database connection type",
+            "value": "sqlite"
+        },
+        "LOG_CHANNEL": {
+            "description": "Logging channel",
+            "value": "errorlog"
+        },
+        "SESSION_DRIVER": {
+            "description": "Session storage driver",
+            "value": "database"
+        },
+        "CACHE_STORE": {
+            "description": "Cache storage driver",
+            "value": "database"
+        }
+    },
+    "buildpacks": [
+        {
+            "url": "heroku/php"
+        }
+    ],
+    "formation": {
+        "web": {
+            "quantity": 1,
+            "size": "eco"
+        }
+    },
+    "scripts": {
+        "postdeploy": "php artisan migrate --force && php artisan config:cache && php artisan route:cache"
+    }
+}
