@@ -6,7 +6,9 @@ WORKDIR /var/www/html
 
 # 1. INSTALL SYSTEM DEPENDENCIES AND PHP EXTENSIONS FIRST
 # These layers will be cached because they rarely change
-RUN apt-get update && apt-get install -y \
+# Add retries and timeout for CI reliability
+RUN apt-get update --fix-missing \
+    && apt-get install -y --no-install-recommends \
     git \
     curl \
     libpng-dev \
