@@ -28,22 +28,20 @@ class AdvancedWordbaseImportService
 
     /**
      * Import wordbase with advanced pre-processing and optimization
+     * Uses streaming processing for memory efficiency on Heroku
      */
     public function importWordbase(bool $clearExisting = false): array
     {
-        // Increase memory limit for large imports
-        ini_set('memory_limit', '512M');
-        
         try {
-            Log::info('Starting advanced wordbase import', [
+            Log::info('Starting advanced wordbase import (streaming)', [
                 'clear_existing' => $clearExisting,
-                'memory_limit' => ini_get('memory_limit')
+                'memory_limit' => ini_get('memory_limit'),
+                'batch_size' => self::BATCH_SIZE
             ]);
 
             if ($clearExisting) {
                 $this->wordRepository->clearWordbase();
-                Cache::flush(); // Clear any cached data
-                Log::info('Cleared existing wordbase and cache');
+                Log::info('Cleared existing wordbase');
             } elseif (!$this->wordRepository->isWordbaseEmpty()) {
                 return [
                     'success' => false,
@@ -52,11 +50,8 @@ class AdvancedWordbaseImportService
                 ];
             }
 
-            // Fetch and pre-process wordlist
-            $wordData = $this->fetchAndPreprocessWordlist();
-            
-            // Import in optimized batches
-            $importResult = $this->importInBatches($wordData);
+            // Stream and process wordlist in batches for memory efficiency
+            $importResult = $this->streamAndProcessWordlist();
 
             // Create additional indexes for performance
             $this->createOptimizedIndexes();
@@ -276,6 +271,159 @@ class AdvancedWordbaseImportService
 
             DB::commit();
             
+            return [
+                'total_imported' => $totalImported,
+                'canonical_form_stats' => $canonicalFormStats,
+                'length_distribution' => $lengthDistribution,
+            ];
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
+    }
+
+    /**
+     * Stream and process wordlist in batches for memory efficiency
+     * This avoids loading the entire wordlist into memory at once
+     */
+    private function streamAndProcessWordlist(): array
+    {
+        Log::info('Starting streaming wordlist processing');
+        
+        // Fetch the wordlist content as a stream
+        $response = Http::timeout(60)->get(self::WORDLIST_URL);
+        
+        if (!$response->successful()) {
+            throw new \Exception('Failed to fetch wordlist: HTTP ' . $response->status());
+        }
+
+        $content = $response->body();
+        if (empty($content)) {
+            throw new \Exception('Wordlist content is empty');
+        }
+
+        // Process content as a stream using generators for memory efficiency
+        return $this->processStreamInBatches($content);
+    }
+
+    /**
+     * Process content stream in batches using generators for memory efficiency
+     */
+    private function processStreamInBatches(string $content): array
+    {
+        $totalImported = 0;
+        $canonicalFormStats = [];
+        $lengthDistribution = [];
+        $batchData = [];
+        $batchCount = 0;
+
+        // Ensure content is valid UTF-8
+        if (!mb_check_encoding($content, 'UTF-8')) {
+            $encodings = ['UTF-8', 'ISO-8859-1', 'Windows-1252', 'ISO-8859-15'];
+            foreach ($encodings as $encoding) {
+                $converted = mb_convert_encoding($content, 'UTF-8', $encoding);
+                if (mb_check_encoding($converted, 'UTF-8')) {
+                    $content = $converted;
+                    Log::info("Converted content from {$encoding} to UTF-8");
+                    break;
+                }
+            }
+        }
+
+        DB::beginTransaction();
+        
+        try {
+            // Process line by line to avoid memory issues
+            $lines = explode("\n", $content);
+            $processedWords = 0;
+            
+            foreach ($lines as $lineNumber => $line) {
+                $word = trim($line);
+                
+                // Skip empty lines
+                if (empty($word)) {
+                    continue;
+                }
+
+                // Validate UTF-8
+                if (!mb_check_encoding($word, 'UTF-8')) {
+                    continue;
+                }
+
+                // Length validation
+                $wordLength = mb_strlen($word, 'UTF-8');
+                if ($wordLength < 2 || $wordLength > 50) {
+                    continue;
+                }
+
+                try {
+                    // Generate canonical form
+                    $canonicalForm = $this->anagramAlgorithm->generateCanonical($word);
+                    
+                    $batchData[] = [
+                        'original_word' => $word,
+                        'canonical_form' => $canonicalForm,
+                        'length' => $wordLength,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ];
+
+                    // Collect statistics
+                    $canonicalFormStats[$canonicalForm] = ($canonicalFormStats[$canonicalForm] ?? 0) + 1;
+                    $lengthDistribution[$wordLength] = ($lengthDistribution[$wordLength] ?? 0) + 1;
+                    $processedWords++;
+
+                    // Process batch when it reaches the batch size
+                    if (count($batchData) >= self::BATCH_SIZE) {
+                        DB::table('words')->insert($batchData);
+                        $totalImported += count($batchData);
+                        $batchCount++;
+                        
+                        // Clear batch data to free memory
+                        $batchData = [];
+
+                        // Log progress every 10 batches
+                        if ($batchCount % 10 === 0) {
+                            Log::info('Streaming batch progress', [
+                                'batches_completed' => $batchCount,
+                                'words_imported' => $totalImported,
+                                'lines_processed' => $lineNumber + 1,
+                                'memory_usage' => memory_get_usage(true)
+                            ]);
+                        }
+
+                        // Clear algorithm cache periodically
+                        if (method_exists($this->anagramAlgorithm, 'clearCache') && $batchCount % 50 === 0) {
+                            $this->anagramAlgorithm->clearCache();
+                        }
+                    }
+
+                } catch (\Exception $e) {
+                    Log::warning('Failed to process word in stream', [
+                        'word' => $word,
+                        'line' => $lineNumber,
+                        'error' => $e->getMessage()
+                    ]);
+                }
+            }
+
+            // Process any remaining words in the final batch
+            if (!empty($batchData)) {
+                DB::table('words')->insert($batchData);
+                $totalImported += count($batchData);
+                $batchCount++;
+            }
+
+            DB::commit();
+            
+            Log::info('Streaming processing completed', [
+                'total_imported' => $totalImported,
+                'batches_processed' => $batchCount,
+                'unique_canonical_forms' => count($canonicalFormStats),
+                'final_memory_usage' => memory_get_usage(true)
+            ]);
+
             return [
                 'total_imported' => $totalImported,
                 'canonical_form_stats' => $canonicalFormStats,

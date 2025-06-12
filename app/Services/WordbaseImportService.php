@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Log;
 class WordbaseImportService
 {
     private const WORDLIST_URL = 'https://www.opus.ee/lemmad2013.txt';
+    private const BATCH_SIZE = 500; // Smaller batches for Heroku memory limits
     
     private WordRepositoryInterface $wordRepository;
     private AnagramAlgorithmInterface $anagramAlgorithm;
@@ -23,12 +24,16 @@ class WordbaseImportService
     }
 
     /**
-     * Import wordbase from the Estonian word list
+     * Import wordbase from the Estonian word list with memory optimization
      */
     public function importWordbase(bool $clearExisting = false): array
     {
         try {
-            Log::info('Starting wordbase import', ['clear_existing' => $clearExisting]);
+            Log::info('Starting wordbase import (streaming)', [
+                'clear_existing' => $clearExisting,
+                'memory_limit' => ini_get('memory_limit'),
+                'batch_size' => self::BATCH_SIZE
+            ]);
 
             if ($clearExisting) {
                 $this->wordRepository->clearWordbase();
@@ -42,7 +47,7 @@ class WordbaseImportService
             }
 
             // Fetch word list from URL
-            $response = Http::timeout(30)->get(self::WORDLIST_URL);
+            $response = Http::timeout(60)->get(self::WORDLIST_URL);
             
             if (!$response->successful()) {
                 throw new \Exception('Failed to fetch wordlist: HTTP ' . $response->status());
@@ -53,30 +58,23 @@ class WordbaseImportService
                 throw new \Exception('Wordlist content is empty');
             }
 
-            // Parse and process words
-            $words = $this->parseWordlist($content);
-            $processedWords = $this->processWords($words);
+            // Process in batches to avoid memory exhaustion
+            $totalImported = $this->processWordlistInBatches($content);
 
-            // Store in database
-            $success = $this->wordRepository->storeWordbase($processedWords);
-
-            if (!$success) {
-                throw new \Exception('Failed to store words in database');
-            }
-
-            $importedCount = count($processedWords);
-            Log::info('Wordbase import completed', ['words_imported' => $importedCount]);
+            Log::info('Wordbase import completed', ['words_imported' => $totalImported]);
 
             return [
                 'success' => true,
-                'message' => "Successfully imported {$importedCount} words",
-                'words_imported' => $importedCount,
+                'message' => "Successfully imported {$totalImported} words",
+                'words_imported' => $totalImported,
             ];
 
         } catch (\Exception $e) {
             Log::error('Wordbase import failed', [
                 'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
+                'trace' => $e->getTraceAsString(),
+                'memory_usage' => memory_get_usage(true),
+                'peak_memory' => memory_get_peak_usage(true)
             ]);
 
             return [
@@ -85,6 +83,107 @@ class WordbaseImportService
                 'words_imported' => 0,
             ];
         }
+    }
+
+    /**
+     * Process wordlist in batches to avoid memory exhaustion
+     */
+    private function processWordlistInBatches(string $content): int
+    {
+        $lines = explode("\n", $content);
+        $totalImported = 0;
+        $batch = [];
+        $processedWords = [];
+
+        Log::info('Starting batch processing', ['total_lines' => count($lines), 'batch_size' => self::BATCH_SIZE]);
+
+        foreach ($lines as $line) {
+            $word = trim($line);
+            if (empty($word)) {
+                continue;
+            }
+
+            $batch[] = $word;
+
+            // Process batch when it reaches the desired size
+            if (count($batch) >= self::BATCH_SIZE) {
+                $processed = $this->processBatch($batch);
+                if (!empty($processed)) {
+                    $success = $this->wordRepository->storeWordbase($processed);
+                    if ($success) {
+                        $totalImported += count($processed);
+                        Log::info('Processed batch', ['batch_size' => count($processed), 'total_imported' => $totalImported]);
+                    } else {
+                        throw new \Exception('Failed to store batch in database');
+                    }
+                }
+                
+                // Clear batch and processed words to free memory
+                $batch = [];
+                $processed = [];
+                
+                // Force garbage collection to free memory
+                if (function_exists('gc_collect_cycles')) {
+                    gc_collect_cycles();
+                }
+            }
+        }
+
+        // Process remaining words in the last batch
+        if (!empty($batch)) {
+            $processed = $this->processBatch($batch);
+            if (!empty($processed)) {
+                $success = $this->wordRepository->storeWordbase($processed);
+                if ($success) {
+                    $totalImported += count($processed);
+                    Log::info('Processed final batch', ['batch_size' => count($processed), 'total_imported' => $totalImported]);
+                } else {
+                    throw new \Exception('Failed to store final batch in database');
+                }
+            }
+        }
+
+        return $totalImported;
+    }
+
+    /**
+     * Process a batch of words
+     */
+    private function processBatch(array $words): array
+    {
+        $processedWords = [];
+        $uniqueWords = array_unique($words); // Remove duplicates within batch
+
+        foreach ($uniqueWords as $word) {
+            try {
+                // Skip words that are too short (less than 2 characters)
+                if (mb_strlen($word, 'UTF-8') < 2) {
+                    continue;
+                }
+
+                // Generate canonical form
+                $canonicalForm = $this->anagramAlgorithm->generateCanonical($word);
+                
+                // Calculate Unicode-aware length
+                $length = mb_strlen($word, 'UTF-8');
+
+                $processedWords[] = [
+                    'original_word' => $word,
+                    'canonical_form' => $canonicalForm,
+                    'length' => $length,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ];
+
+            } catch (\Exception $e) {
+                Log::warning('Failed to process word', [
+                    'word' => $word,
+                    'error' => $e->getMessage()
+                ]);
+            }
+        }
+
+        return $processedWords;
     }
 
     /**
