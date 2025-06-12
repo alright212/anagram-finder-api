@@ -8,6 +8,7 @@ return [
                 'title' => 'Anagram Finder API',
             ],
 
+            
             'routes' => [
                 /*
                  * Route for accessing api documentation interface
