@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Services\AnagramService;
+use App\Traits\TranslatesApiMessages;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -11,6 +12,8 @@ use Illuminate\Validation\ValidationException;
 
 class AnagramController extends Controller
 {
+    use TranslatesApiMessages;
+
     private AnagramService $anagramService;
 
     public function __construct(AnagramService $anagramService)
@@ -86,40 +89,44 @@ class AnagramController extends Controller
         try {
             // Basic validation
             if (empty(trim($word))) {
-                return response()->json([
-                    'error' => [
-                        'message' => 'Word parameter cannot be empty',
-                        'code' => 'INVALID_WORD'
-                    ]
-                ], 400);
+                return $this->errorResponse(
+                    'anagrams.empty_word', 
+                    'INVALID_WORD', 
+                    400
+                );
             }
 
             // Check if wordbase is ready
             if (!$this->anagramService->isWordbaseReady()) {
-                return response()->json([
-                    'error' => [
-                        'message' => 'Wordbase not available. Please import wordbase first.',
-                        'code' => 'WORDBASE_NOT_READY'
-                    ]
-                ], 503); // Service Unavailable
+                return $this->errorResponse(
+                    'anagrams.not_ready', 
+                    'WORDBASE_NOT_READY', 
+                    503
+                );
             }
 
             // Validate word length (reasonable limits)
             if (mb_strlen($word, 'UTF-8') > 100) {
-                return response()->json([
-                    'error' => [
-                        'message' => 'Word too long. Maximum length is 100 characters.',
-                        'code' => 'WORD_TOO_LONG'
-                    ]
-                ], 400);
+                return $this->errorResponse(
+                    'anagrams.word_too_long', 
+                    'WORD_TOO_LONG', 
+                    400, 
+                    ['max' => 100]
+                );
             }
 
             // Find anagrams with metadata
             $result = $this->anagramService->findAnagramsWithMetadata($word);
 
-            return response()->json([
-                'data' => $result
-            ]);
+            // Add localized success message
+            $result['message'] = $this->transAnagram('search_completed');
+            
+            // Add performance message if search time is available
+            if (isset($result['search_time_ms'])) {
+                $result['performance_note'] = $this->transPerformance('search_time', ['time' => $result['search_time_ms']]);
+            }
+
+            return $this->localizedResponse(['data' => $result]);
 
         } catch (\InvalidArgumentException $e) {
             Log::error('Anagram search failed', [
@@ -128,12 +135,12 @@ class AnagramController extends Controller
                 'trace' => $e->getTraceAsString()
             ]);
 
-            return response()->json([
-                'error' => [
-                    'message' => $e->getMessage(),
-                    'code' => 'INVALID_INPUT'
-                ]
-            ], 400);
+            return $this->errorResponse(
+                'anagrams.processing_error', 
+                'INVALID_INPUT', 
+                400, 
+                ['word' => $word]
+            );
         }
     }
 
@@ -167,8 +174,35 @@ class AnagramController extends Controller
     {
         $stats = $this->anagramService->getWordbaseStats();
 
-        return response()->json([
-            'data' => $stats
+        // Add localized labels for statistics
+        $localizedStats = $this->localizeStats($stats);
+        
+        return $this->localizedResponse([
+            'data' => $localizedStats,
+            'message' => $this->transStats('wordbase_ready') 
         ]);
+    }
+
+    /**
+     * Add localized labels to statistics
+     */
+    private function localizeStats(array $stats): array
+    {
+        $localized = $stats;
+        
+        // Add localized descriptions for key statistics
+        if (isset($stats['total_words'])) {
+            $localized['total_words_label'] = $this->transStats('total_words');
+        }
+        
+        if (isset($stats['unique_canonical_forms'])) {
+            $localized['unique_canonical_forms_label'] = $this->transStats('unique_canonical_forms');
+        }
+        
+        if (isset($stats['avg_length'])) {
+            $localized['average_word_length_label'] = $this->transStats('average_word_length');
+        }
+
+        return $localized;
     }
 }

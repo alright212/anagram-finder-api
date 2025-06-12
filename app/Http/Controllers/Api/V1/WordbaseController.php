@@ -5,10 +5,13 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\WordbaseImportRequest;
 use App\Services\WordbaseImportService;
+use App\Traits\TranslatesApiMessages;
 use Illuminate\Http\JsonResponse;
 
 class WordbaseController extends Controller
 {
+    use TranslatesApiMessages;
+
     private WordbaseImportService $importService;
 
     public function __construct(WordbaseImportService $importService)
@@ -99,31 +102,37 @@ class WordbaseController extends Controller
 
         // Return appropriate HTTP status based on result
         if ($result['success']) {
-            return response()->json([
-                'message' => $result['message'],
-                'data' => [
-                    'words_imported' => $result['words_imported'],
-                    'timestamp' => now()->toISOString(),
-                ]
-            ], $result['words_imported'] > 0 ? 201 : 200);
+            $responseData = [
+                'words_imported' => $result['words_imported'],
+                'timestamp' => now()->toISOString(),
+            ];
+
+            // Choose message based on whether words were actually imported
+            $messageKey = $result['words_imported'] > 0 ? 'wordbase.import_completed' : 'wordbase.already_exists';
+            $status = $result['words_imported'] > 0 ? 201 : 200;
+
+            return $this->successResponse(
+                $messageKey,
+                $responseData,
+                $status,
+                ['count' => $result['words_imported']]
+            );
         }
 
         // Handle different types of failures
         if (str_contains($result['message'], 'already exists')) {
-            return response()->json([
-                'error' => [
-                    'message' => $result['message'],
-                    'code' => 'WORDBASE_EXISTS'
-                ]
-            ], 409); // Conflict
+            return $this->errorResponse(
+                'wordbase.already_exists',
+                'WORDBASE_EXISTS',
+                409
+            );
         }
 
-        return response()->json([
-            'error' => [
-                'message' => $result['message'],
-                'code' => 'IMPORT_FAILED'
-            ]
-        ], 500);
+        return $this->errorResponse(
+            'wordbase.import_failed',
+            'IMPORT_FAILED',
+            500
+        );
     }
 
     /**
@@ -157,8 +166,33 @@ class WordbaseController extends Controller
     {
         $status = $this->importService->getImportStatus();
 
-        return response()->json([
-            'data' => $status
+        // Add localized status information
+        $localizedStatus = $this->localizeWordbaseStatus($status);
+
+        return $this->localizedResponse([
+            'data' => $localizedStatus,
+            'message' => $this->transWordbase('status_check')
         ]);
+    }
+
+    /**
+     * Add localized labels to wordbase status
+     */
+    private function localizeWordbaseStatus(array $status): array
+    {
+        $localized = $status;
+        
+        // Add localized status messages
+        if (isset($status['wordbase_exists'])) {
+            $localized['status_message'] = $status['wordbase_exists'] 
+                ? $this->transWordbase('cleared') 
+                : $this->transWordbase('empty');
+        }
+        
+        if (isset($status['word_count']) && $status['word_count'] > 0) {
+            $localized['import_message'] = $this->transWordbase('words_imported', ['count' => $status['word_count']]);
+        }
+
+        return $localized;
     }
 }

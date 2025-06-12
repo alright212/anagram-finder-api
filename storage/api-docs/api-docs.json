@@ -15,6 +15,222 @@
         }
     ],
     "paths": {
+        "/api/v1/advanced/wordbase/import": {
+            "post": {
+                "tags": [
+                    "Advanced Wordbase"
+                ],
+                "summary": "Import wordbase with Unicode optimization",
+                "description": "Import words from Estonian word list with advanced Unicode processing and optimization",
+                "operationId": "importAdvancedWordbase",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "force": {
+                                        "description": "Force reimport even if wordbase already exists",
+                                        "type": "boolean",
+                                        "example": false
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Wordbase already exists",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Advanced wordbase import completed"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "words_imported": {
+                                                    "type": "integer",
+                                                    "example": 0
+                                                },
+                                                "statistics": {
+                                                    "type": "object",
+                                                    "nullable": true
+                                                },
+                                                "timestamp": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "201": {
+                        "description": "Advanced wordbase imported successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Advanced wordbase import completed"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "words_imported": {
+                                                    "type": "integer",
+                                                    "example": 50000
+                                                },
+                                                "statistics": {
+                                                    "properties": {
+                                                        "unicode_words": {
+                                                            "type": "integer",
+                                                            "example": 1200
+                                                        },
+                                                        "ascii_words": {
+                                                            "type": "integer",
+                                                            "example": 48800
+                                                        },
+                                                        "processing_time_ms": {
+                                                            "type": "number",
+                                                            "format": "float",
+                                                            "example": 2500.5
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                },
+                                                "timestamp": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "Wordbase already exists",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "properties": {
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "Wordbase already exists"
+                                                },
+                                                "code": {
+                                                    "type": "string",
+                                                    "example": "WORDBASE_EXISTS"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Import failed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "properties": {
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "Advanced import failed"
+                                                },
+                                                "code": {
+                                                    "type": "string",
+                                                    "example": "IMPORT_FAILED"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/advanced/wordbase/status": {
+            "get": {
+                "tags": [
+                    "Advanced Wordbase"
+                ],
+                "summary": "Get advanced wordbase status",
+                "description": "Returns detailed status of the advanced wordbase including Unicode processing statistics",
+                "operationId": "getAdvancedWordbaseStatus",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "is_imported": {
+                                                    "type": "boolean",
+                                                    "example": true
+                                                },
+                                                "total_words": {
+                                                    "type": "integer",
+                                                    "example": 50000
+                                                },
+                                                "unicode_words": {
+                                                    "type": "integer",
+                                                    "example": 1200
+                                                },
+                                                "ascii_words": {
+                                                    "type": "integer",
+                                                    "example": 48800
+                                                },
+                                                "last_import_date": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2025-06-12T10:30:00Z"
+                                                },
+                                                "optimization_level": {
+                                                    "type": "string",
+                                                    "example": "unicode_optimized"
+                                                },
+                                                "file_size": {
+                                                    "type": "string",
+                                                    "example": "2.5 MB"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/anagrams/{word}": {
             "get": {
                 "tags": [
@@ -364,6 +580,10 @@
         {
             "name": "Wordbase",
             "description": "Operations for managing the word database"
+        },
+        {
+            "name": "Advanced Wordbase",
+            "description": "Advanced operations for managing the word database with Unicode optimization"
         }
     ]
 }

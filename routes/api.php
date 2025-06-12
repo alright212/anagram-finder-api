@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\V1\AnagramController;
 use App\Http\Controllers\Api\V1\WordbaseController;
 use App\Http\Controllers\Api\V1\AdvancedWordbaseController;
+use App\Http\Controllers\Api\V1\LocaleController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -34,6 +35,14 @@ Route::prefix('v1')->group(function () {
     Route::prefix('anagrams')->group(function () {
         Route::get('stats', [AnagramController::class, 'stats'])->name('api.v1.anagrams.stats');
         Route::get('{word}', [AnagramController::class, 'show'])->name('api.v1.anagrams.show');
+    });
+
+    // Internationalization routes
+    Route::prefix('locale')->group(function () {
+        Route::get('info', [LocaleController::class, 'info'])->name('api.v1.locale.info');
+        Route::get('translations/{namespace}', [LocaleController::class, 'translations'])->name('api.v1.locale.translations');
+        Route::post('preference', [LocaleController::class, 'setPreference'])->name('api.v1.locale.preference');
+        Route::get('debug', [LocaleController::class, 'debug'])->name('api.v1.locale.debug');
     });
 
     // Advanced wordbase management with Unicode optimization

@@ -27,6 +27,10 @@ namespace App\Http\Controllers;
  *     name="Advanced Wordbase",
  *     description="Advanced operations for managing the word database with Unicode optimization"
  * )
+ * @OA\Tag(
+ *     name="Locale",
+ *     description="Internationalization and locale management operations"
+ * )
  */
 abstract class Controller
 {

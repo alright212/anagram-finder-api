@@ -5,10 +5,13 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\WordbaseImportRequest;
 use App\Services\AdvancedWordbaseImportService;
+use App\Traits\TranslatesApiMessages;
 use Illuminate\Http\JsonResponse;
 
 class AdvancedWordbaseController extends Controller
 {
+    use TranslatesApiMessages;
+
     private AdvancedWordbaseImportService $importService;
 
     public function __construct(AdvancedWordbaseImportService $importService)
@@ -105,32 +108,40 @@ class AdvancedWordbaseController extends Controller
 
         // Return appropriate HTTP status based on result
         if ($result['success']) {
-            return response()->json([
-                'message' => $result['message'],
-                'data' => [
-                    'words_imported' => $result['words_imported'],
-                    'statistics' => $result['statistics'] ?? null,
-                    'timestamp' => now()->toISOString(),
-                ]
-            ], $result['words_imported'] > 0 ? 201 : 200);
+            $responseData = [
+                'words_imported' => $result['words_imported'],
+                'statistics' => $this->localizeAdvancedStatistics($result['statistics'] ?? []),
+                'timestamp' => now()->toISOString(),
+            ];
+
+            // Choose message based on whether words were actually imported
+            $messageKey = $result['words_imported'] > 0 
+                ? 'advanced_wordbase.unicode_processing' 
+                : 'wordbase.already_exists';
+            $status = $result['words_imported'] > 0 ? 201 : 200;
+
+            return $this->successResponse(
+                $messageKey,
+                $responseData,
+                $status,
+                ['count' => $result['words_imported']]
+            );
         }
 
         // Handle different types of failures
         if (str_contains($result['message'], 'already exists')) {
-            return response()->json([
-                'error' => [
-                    'message' => $result['message'],
-                    'code' => 'WORDBASE_EXISTS'
-                ]
-            ], 409); // Conflict
+            return $this->errorResponse(
+                'wordbase.already_exists',
+                'WORDBASE_EXISTS',
+                409
+            );
         }
 
-        return response()->json([
-            'error' => [
-                'message' => $result['message'],
-                'code' => 'IMPORT_FAILED'
-            ]
-        ], 500);
+        return $this->errorResponse(
+            'advanced_wordbase.unicode_processing',
+            'IMPORT_FAILED',
+            500
+        );
     }
 
     /**
@@ -165,8 +176,63 @@ class AdvancedWordbaseController extends Controller
     {
         $status = $this->importService->getAdvancedImportStatus();
 
-        return response()->json([
-            'data' => $status
+        // Add localized status information for advanced features
+        $localizedStatus = $this->localizeAdvancedWordbaseStatus($status);
+
+        return $this->localizedResponse([
+            'data' => $localizedStatus,
+            'message' => $this->transAdvancedWordbase('unicode_processing')
         ]);
+    }
+
+    /**
+     * Add localized labels to advanced statistics
+     */
+    private function localizeAdvancedStatistics(array $statistics): array
+    {
+        if (empty($statistics)) {
+            return $statistics;
+        }
+
+        $localized = $statistics;
+        
+        // Add Unicode-specific localized messages
+        if (isset($statistics['unicode_words_found'])) {
+            $localized['unicode_message'] = $this->transAdvancedWordbase(
+                'unicode_words_found', 
+                ['count' => $statistics['unicode_words_found']]
+            );
+        }
+
+        if (isset($statistics['canonical_forms_generated'])) {
+            $localized['canonical_message'] = $this->transAdvancedWordbase(
+                'canonical_forms_generated',
+                ['count' => $statistics['canonical_forms_generated']]
+            );
+        }
+
+        return $localized;
+    }
+
+    /**
+     * Add localized labels to advanced wordbase status
+     */
+    private function localizeAdvancedWordbaseStatus(array $status): array
+    {
+        $localized = $status;
+        
+        // Add advanced status messages
+        if (isset($status['wordbase_exists']) && $status['wordbase_exists']) {
+            $localized['advanced_status_message'] = $this->transAdvancedWordbase('estonian_optimization');
+        }
+        
+        if (isset($status['unicode_words']) && $status['unicode_words'] > 0) {
+            $localized['unicode_status'] = $this->transAdvancedWordbase(
+                'unicode_words_found', 
+                ['count' => $status['unicode_words']]
+            );
+        }
+
+        return $localized;
     }
 }
