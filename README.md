@@ -267,6 +267,104 @@ curl "http://localhost:8000/api/v1/anagrams/silent"
 curl "http://localhost:8000/api/v1/anagrams/stats"
 ```
 
+## 📚 API Documentation
+
+### 🌐 Interactive Swagger UI
+
+The API is fully documented with **automatic Swagger/OpenAPI documentation**:
+
+- **Swagger UI**: `http://localhost:8000/api/documentation`
+- **JSON Spec**: `http://localhost:8000/docs/api-docs.json`
+- **YAML Spec**: `http://localhost:8000/docs/api-docs.yaml`
+
+### 🔧 Regenerate Documentation
+
+To regenerate the API documentation after making changes:
+
+```bash
+# Using the provided script
+./generate_docs.sh
+
+# Or manually
+php artisan l5-swagger:generate
+```
+
+### 📋 API Endpoints Overview
+
+#### **Anagram Operations**
+
+| Endpoint | Method | Description | Example |
+|----------|--------|-------------|---------|
+| `/api/v1/anagrams/{word}` | GET | Find anagrams for a word | `/api/v1/anagrams/listen` |
+| `/api/v1/anagrams/stats` | GET | Get wordbase statistics | `/api/v1/anagrams/stats` |
+
+#### **Wordbase Management**
+
+| Endpoint | Method | Description | Parameters |
+|----------|--------|-------------|------------|
+| `/api/v1/wordbase/import` | POST | Import Estonian wordbase | `force: boolean` |
+| `/api/v1/wordbase/status` | GET | Get import status | - |
+
+### 📝 API Response Examples
+
+#### Find Anagrams Response
+```json
+{
+  "data": {
+    "word": "listen",
+    "anagrams": ["silent", "enlist"],
+    "count": 2,
+    "search_time_ms": 12.5
+  }
+}
+```
+
+#### Statistics Response
+```json
+{
+  "data": {
+    "total_words": 177953,
+    "is_ready": true,
+    "last_updated": "2025-06-12T10:30:00Z"
+  }
+}
+```
+
+#### Error Response
+```json
+{
+  "error": {
+    "message": "Word parameter cannot be empty",
+    "code": "INVALID_WORD"
+  }
+}
+```
+
+### 🔒 HTTP Status Codes
+
+- `200` - Success
+- `201` - Created (wordbase imported)
+- `400` - Bad Request (invalid input)
+- `409` - Conflict (wordbase already exists)
+- `500` - Internal Server Error
+- `503` - Service Unavailable (wordbase not ready)
+
+### ✨ Features of the API Documentation
+
+- **Interactive Testing**: Try API calls directly from the Swagger UI
+- **Request/Response Examples**: Complete examples for all endpoints
+- **Parameter Validation**: Detailed parameter requirements and constraints
+- **Error Handling**: Comprehensive error response documentation
+- **Schema Definitions**: Structured data models for all responses
+- **Authentication**: Ready for future auth implementation
+
+### 🛠️ Customizing Documentation
+
+The Swagger configuration can be customized in:
+- `config/l5-swagger.php` - Main configuration
+- `app/Http/Controllers/Controller.php` - Base API information
+- Controller methods - Individual endpoint documentation
+
 ---
 
 **Built with ❤️ for Estonian language processing and Unicode excellence**

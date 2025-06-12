@@ -1,0 +1,369 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Anagram Finder API",
+        "description": "API for finding anagrams and managing wordbase",
+        "contact": {
+            "email": "admin@anagramfinder.local"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "/",
+            "description": "API Server"
+        }
+    ],
+    "paths": {
+        "/api/v1/anagrams/{word}": {
+            "get": {
+                "tags": [
+                    "Anagrams"
+                ],
+                "summary": "Find anagrams for a given word",
+                "description": "Returns all anagrams found for the provided word along with metadata",
+                "operationId": "findAnagrams",
+                "parameters": [
+                    {
+                        "name": "word",
+                        "in": "path",
+                        "description": "The word to find anagrams for",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "maxLength": 100,
+                            "minLength": 1,
+                            "example": "listen"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "word": {
+                                                    "type": "string",
+                                                    "example": "listen"
+                                                },
+                                                "anagrams": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    },
+                                                    "example": [
+                                                        "silent",
+                                                        "enlist"
+                                                    ]
+                                                },
+                                                "count": {
+                                                    "type": "integer",
+                                                    "example": 2
+                                                },
+                                                "search_time_ms": {
+                                                    "type": "number",
+                                                    "format": "float",
+                                                    "example": 12.5
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "properties": {
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "Word parameter cannot be empty"
+                                                },
+                                                "code": {
+                                                    "type": "string",
+                                                    "example": "INVALID_WORD"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "503": {
+                        "description": "Service unavailable",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "properties": {
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "Wordbase not available. Please import wordbase first."
+                                                },
+                                                "code": {
+                                                    "type": "string",
+                                                    "example": "WORDBASE_NOT_READY"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/anagrams/stats": {
+            "get": {
+                "tags": [
+                    "Anagrams"
+                ],
+                "summary": "Get wordbase statistics",
+                "description": "Returns statistics about the current wordbase including total words count",
+                "operationId": "getAnagramStats",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "total_words": {
+                                                    "type": "integer",
+                                                    "example": 50000
+                                                },
+                                                "is_ready": {
+                                                    "type": "boolean",
+                                                    "example": true
+                                                },
+                                                "last_updated": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2025-06-12T10:30:00Z"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/wordbase/import": {
+            "post": {
+                "tags": [
+                    "Wordbase"
+                ],
+                "summary": "Import wordbase",
+                "description": "Import words from Estonian word list into the database",
+                "operationId": "importWordbase",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "force": {
+                                        "description": "Force reimport even if wordbase already exists",
+                                        "type": "boolean",
+                                        "example": false
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Wordbase already exists",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Wordbase import completed"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "words_imported": {
+                                                    "type": "integer",
+                                                    "example": 0
+                                                },
+                                                "timestamp": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "201": {
+                        "description": "Wordbase imported successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Wordbase import completed"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "words_imported": {
+                                                    "type": "integer",
+                                                    "example": 50000
+                                                },
+                                                "timestamp": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "Wordbase already exists",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "properties": {
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "Wordbase already exists"
+                                                },
+                                                "code": {
+                                                    "type": "string",
+                                                    "example": "WORDBASE_EXISTS"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Import failed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "properties": {
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "Import failed"
+                                                },
+                                                "code": {
+                                                    "type": "string",
+                                                    "example": "IMPORT_FAILED"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/wordbase/status": {
+            "get": {
+                "tags": [
+                    "Wordbase"
+                ],
+                "summary": "Get wordbase import status",
+                "description": "Returns the current status of the wordbase including import information",
+                "operationId": "getWordbaseStatus",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "is_imported": {
+                                                    "type": "boolean",
+                                                    "example": true
+                                                },
+                                                "total_words": {
+                                                    "type": "integer",
+                                                    "example": 50000
+                                                },
+                                                "last_import_date": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2025-06-12T10:30:00Z"
+                                                },
+                                                "file_size": {
+                                                    "type": "string",
+                                                    "example": "2.5 MB"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Anagrams",
+            "description": "Operations for finding anagrams"
+        },
+        {
+            "name": "Wordbase",
+            "description": "Operations for managing the word database"
+        }
+    ]
+}

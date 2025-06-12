@@ -94,6 +94,8 @@ class AdvancedWordbaseController extends Controller
      *         )
      *     )
      * )
+     * 
+     * POST /api/v1/advanced/wordbase/import
      */
     public function import(WordbaseImportRequest $request): JsonResponse
     {
@@ -160,6 +162,8 @@ class AdvancedWordbaseController extends Controller
      *         )
      *     )
      * )
+     * 
+     * GET /api/v1/advanced/wordbase/status
      */
     public function status(): JsonResponse
     {

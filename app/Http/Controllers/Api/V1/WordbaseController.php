@@ -18,6 +18,75 @@ class WordbaseController extends Controller
 
     /**
      * Import wordbase from Estonian word list
+     * 
+     * @OA\Post(
+     *     path="/api/v1/wordbase/import",
+     *     operationId="importWordbase",
+     *     tags={"Wordbase"},
+     *     summary="Import wordbase",
+     *     description="Import words from Estonian word list into the database",
+     *     @OA\RequestBody(
+     *         @OA\JsonContent(
+     *             @OA\Property(
+     *                 property="force",
+     *                 type="boolean",
+     *                 description="Force reimport even if wordbase already exists",
+     *                 example=false
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Wordbase already exists",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Wordbase import completed"),
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="object",
+     *                 @OA\Property(property="words_imported", type="integer", example=0),
+     *                 @OA\Property(property="timestamp", type="string", format="date-time")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Wordbase imported successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Wordbase import completed"),
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="object",
+     *                 @OA\Property(property="words_imported", type="integer", example=50000),
+     *                 @OA\Property(property="timestamp", type="string", format="date-time")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=409,
+     *         description="Wordbase already exists",
+     *         @OA\JsonContent(
+     *             @OA\Property(
+     *                 property="error",
+     *                 type="object",
+     *                 @OA\Property(property="message", type="string", example="Wordbase already exists"),
+     *                 @OA\Property(property="code", type="string", example="WORDBASE_EXISTS")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Import failed",
+     *         @OA\JsonContent(
+     *             @OA\Property(
+     *                 property="error",
+     *                 type="object",
+     *                 @OA\Property(property="message", type="string", example="Import failed"),
+     *                 @OA\Property(property="code", type="string", example="IMPORT_FAILED")
+     *             )
+     *         )
+     *     )
+     * )
+     * 
      * POST /api/v1/wordbase/import
      */
     public function import(WordbaseImportRequest $request): JsonResponse
@@ -59,6 +128,29 @@ class WordbaseController extends Controller
 
     /**
      * Get wordbase status
+     * 
+     * @OA\Get(
+     *     path="/api/v1/wordbase/status",
+     *     operationId="getWordbaseStatus",
+     *     tags={"Wordbase"},
+     *     summary="Get wordbase import status",
+     *     description="Returns the current status of the wordbase including import information",
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="object",
+     *                 @OA\Property(property="is_imported", type="boolean", example=true),
+     *                 @OA\Property(property="total_words", type="integer", example=50000),
+     *                 @OA\Property(property="last_import_date", type="string", format="date-time", example="2025-06-12T10:30:00Z"),
+     *                 @OA\Property(property="file_size", type="string", example="2.5 MB")
+     *             )
+     *         )
+     *     )
+     * )
+     * 
      * GET /api/v1/wordbase/status
      */
     public function status(): JsonResponse

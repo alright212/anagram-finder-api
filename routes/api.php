@@ -37,11 +37,13 @@ Route::prefix('v1')->group(function () {
     });
 
     // Advanced wordbase management with Unicode optimization
+    /*
     Route::prefix('advanced')->group(function () {
         Route::prefix('wordbase')->group(function () {
             Route::post('import', [AdvancedWordbaseController::class, 'import'])->name('api.v1.advanced.wordbase.import');
             Route::get('status', [AdvancedWordbaseController::class, 'status'])->name('api.v1.advanced.wordbase.status');
         });
     });
+    */
     
 });
