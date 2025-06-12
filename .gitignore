@@ -4,6 +4,7 @@
 .env.backup
 .env.production
 .phpactor.json
+.env.heroku
 .phpunit.result.cache
 /.fleet
 /.idea
@@ -30,3 +31,4 @@ incremental_commits.pid
 test_i18n.sh
 test_unicode.php
 test-local.sh
+.env.heroku
