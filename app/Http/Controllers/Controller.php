@@ -8,7 +8,7 @@ namespace App\Http\Controllers;
  *     version="1.0.0",
  *     description="API for finding anagrams and managing wordbase",
  *     @OA\Contact(
- *         email="admin@anagramfinder.local"
+ *         email="glen.kink@gmail.com"
  *     )
  * )
  * @OA\Server(
