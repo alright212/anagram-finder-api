@@ -12,6 +12,11 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        // Register the CORS middleware for API routes
+        $middleware->api(prepend: [
+            \App\Http\Middleware\CorsMiddleware::class,
+        ]);
+        
         // Register the locale middleware for API routes
         $middleware->api(append: [
             \App\Http\Middleware\LocaleMiddleware::class,

@@ -40,6 +40,26 @@ return [
         'processing_words' => 'Traitement des mots',
         'optimizing_database' => 'Optimisation des index de base de données',
         'statistics_generated' => 'Statistiques d\'import générées',
+        'status' => [
+            'total_words' => 'Total des Mots',
+            'languages' => 'Langues',
+            'last_updated' => 'Dernière Mise à Jour',
+        ],
+        'import' => [
+            'title' => 'Importer la Base de Mots',
+            'description' => 'Importer de nouveaux mots dans la base de mots pour la génération d\'anagrammes.',
+            'instructions' => [
+                'title' => 'Instructions d\'Import',
+                'plain_text' => 'Format Texte Brut: Entrer un mot par ligne',
+                'json_format' => 'Format JSON: Fournir un tableau de chaînes comme ["mot1", "mot2"]',
+                'language_selection' => 'Sélection de Langue: Choisir la langue appropriée pour les mots',
+                'duplicates' => 'Doublons: Les mots dupliqués seront automatiquement ignorés',
+                'processing_time' => 'Temps de Traitement: Les gros imports peuvent prendre plusieurs secondes',
+            ],
+        ],
+        'importForm' => [
+            'placeholder' => 'Entrer les mots à importer (un mot par ligne pour le format texte, ou tableau JSON pour le format JSON)',
+        ],
     ],
 
     // Advanced wordbase messages

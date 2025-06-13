@@ -40,6 +40,26 @@ return [
         'processing_words' => 'Wörter werden verarbeitet',
         'optimizing_database' => 'Datenbank-Indizes werden optimiert',
         'statistics_generated' => 'Import-Statistiken generiert',
+        'status' => [
+            'total_words' => 'Gesamte Wörter',
+            'languages' => 'Sprachen',
+            'last_updated' => 'Zuletzt Aktualisiert',
+        ],
+        'import' => [
+            'title' => 'Wortbasis Importieren',
+            'description' => 'Neue Wörter in die Wortbasis für Anagramm-Generierung importieren.',
+            'instructions' => [
+                'title' => 'Import-Anweisungen',
+                'plain_text' => 'Textformat: Ein Wort pro Zeile eingeben',
+                'json_format' => 'JSON-Format: Array von Strings wie ["wort1", "wort2"] bereitstellen',
+                'language_selection' => 'Sprachauswahl: Passende Sprache für die Wörter wählen',
+                'duplicates' => 'Duplikate: Doppelte Wörter werden automatisch übersprungen',
+                'processing_time' => 'Verarbeitungszeit: Große Importe können mehrere Sekunden dauern',
+            ],
+        ],
+        'importForm' => [
+            'placeholder' => 'Wörter zum Import eingeben (ein Wort pro Zeile für Textformat oder JSON-Array für JSON-Format)',
+        ],
     ],
 
     // Advanced wordbase messages

@@ -9,22 +9,105 @@ return [
     'invalid_request' => 'Invalid request',
     'service_unavailable' => 'Service temporarily unavailable',
 
-    // Anagram-specific messages
-    'anagrams' => [
-        'found' => 'Found :count anagram(s) for ":word"',
-        'none_found' => 'No anagrams found for ":word"',
-        'search_completed' => 'Anagram search completed',
-        'invalid_word' => 'Invalid word provided',
-        'word_too_long' => 'Word too long. Maximum length is :max characters',
-        'word_too_short' => 'Word too short. Minimum length is :min characters',
-        'empty_word' => 'Word parameter cannot be empty',
-        'processing_error' => 'Error processing word ":word"',
-        'unicode_support' => 'Full Unicode support enabled',
-        'estonian_characters' => 'Estonian characters detected: :chars',
+    // Common UI elements
+    'common' => [
+        'search' => 'Search',
+        'import' => 'Import',
+        'about' => 'About',
+        'home' => 'Home',
+        'loading' => 'Loading...',
+        'error' => 'Error',
+        'success' => 'Success',
+        'cancel' => 'Cancel',
+        'save' => 'Save',
+        'delete' => 'Delete',
+        'edit' => 'Edit',
+        'close' => 'Close',
     ],
 
-    // Wordbase messages
+    // Navigation elements
+    'navigation' => [
+        'title' => 'Estonian Anagram Finder',
+        'subtitle' => 'Find word anagrams quickly and easily',
+    ],
+
+    // Search interface
+    'search' => [
+        'title' => 'Anagram Search',
+        'description' => 'Enter an Estonian word to find its anagrams',
+        'placeholder' => 'Enter a word to find anagrams...',
+        'searchButton' => 'Search Anagrams',
+        'noResults' => 'No anagrams found',
+        'recentSearches' => 'Recent Searches',
+        'results' => [
+            'title' => 'Found anagrams:',
+            'count' => 'Total: {{count}} anagrams',
+            'executionTime' => 'Search time: {{time}}ms',
+            'algorithm' => 'Algorithm: {{algorithm}}',
+        ],
+        'tips' => [
+            'title' => '💡 Search Tips',
+            'items' => [
+                'estonianWords' => 'Use Estonian words for best results',
+                'minimumLength' => 'Words must be at least 2 characters long',
+                'clickResults' => 'Click on any anagram result to search for its anagrams',
+                'useHistory' => 'Use your recent searches for quick access',
+            ],
+        ],
+    ],
+
+    // Error messages
+    'errors' => [
+        'networkError' => 'Network connection error',
+        'serverError' => 'Server error',
+        'invalidInput' => 'Invalid input',
+        'wordNotFound' => 'Word not found',
+        'importFailed' => 'Import failed',
+    ],
+
+    // Wordbase management
     'wordbase' => [
+        'title' => 'Wordbase Import',
+        'status' => 'Wordbase Status',
+        'totalWords' => 'Total words: {{count}}',
+        'lastImport' => 'Last import: {{date}}',
+        'statusLabels' => [
+            'total_words' => 'Total Words',
+            'languages' => 'Languages',
+            'last_updated' => 'Last Updated',
+        ],
+        'import' => [
+            'title' => 'Import Wordbase',
+            'description' => 'Import new words into the wordbase for anagram generation.',
+            'instructions' => [
+                'title' => 'Import Instructions',
+                'plain_text' => 'Plain Text Format: Enter one word per line',
+                'json_format' => 'JSON Format: Provide an array of strings like ["word1", "word2"]',
+                'language_selection' => 'Language Selection: Choose the appropriate language for the words',
+                'duplicates' => 'Duplicates: Duplicate words will be automatically skipped',
+                'processing_time' => 'Processing Time: Large imports may take several seconds',
+            ],
+        ],
+        'importForm' => [
+            'title' => 'Import Words',
+            'content' => 'Words (one per line)',
+            'format' => 'Format',
+            'language' => 'Language',
+            'importButton' => 'Import Words',
+            'placeholder' => 'Enter words to import (one per line for text format, or JSON array for JSON format)',
+            'failed' => 'Import failed',
+        ],
+        'formats' => [
+            'plaintext' => 'Plain text',
+            'json' => 'JSON',
+        ],
+        'languages' => [
+            'et' => 'Estonian',
+            'en' => 'English',
+            'de' => 'German',
+            'fr' => 'French',
+        ],
+        // Legacy API messages for backward compatibility
         'import_started' => 'Wordbase import started',
         'import_completed' => 'Wordbase import completed successfully',
         'import_failed' => 'Wordbase import failed',
@@ -40,6 +123,159 @@ return [
         'processing_words' => 'Processing words',
         'optimizing_database' => 'Optimizing database indexes',
         'statistics_generated' => 'Import statistics generated',
+    ],
+
+    // About page
+    'about' => [
+        'title' => 'About Anagram Finder',
+        'description' => 'This application allows you to find anagrams of Estonian words using advanced algorithms.',
+        'features' => [
+            'title' => 'Features',
+            'items' => [
+                'fastSearch' => 'Fast anagram search',
+                'fastSearchDescription' => 'Optimized algorithms for instant anagram detection',
+                'multilingualSupport' => 'Multilingual support',
+                'multilingualSupportDescription' => 'Support for Estonian, English, German, and French',
+                'customDatabase' => 'Customizable word database',
+                'customDatabaseDescription' => 'Import your own word lists and customize the database',
+                'modernInterface' => 'Modern user interface',
+                'modernInterfaceDescription' => 'Built with React 18, TypeScript, and Chakra UI',
+                'realTimeStats' => 'Real-time statistics',
+                'realTimeStatsDescription' => 'View search performance and word database statistics',
+            ],
+        ],
+        'algorithm' => [
+            'title' => 'Algorithm',
+            'description' => 'We use optimized algorithms that ensure fast and accurate anagram detection.',
+            'types' => [
+                'characterFrequency' => [
+                    'name' => 'Character Frequency Analysis',
+                    'description' => 'Uses character frequency counting for efficient anagram detection',
+                    'complexity' => 'O(n + m)',
+                ],
+                'sortingBased' => [
+                    'name' => 'Sorting-based Comparison',
+                    'description' => 'Sorts characters to find anagrams through string comparison',
+                    'complexity' => 'O(n log n)',
+                ],
+                'hashBased' => [
+                    'name' => 'Hash-based Lookup',
+                    'description' => 'Pre-computed hash tables for ultra-fast anagram retrieval',
+                    'complexity' => 'O(1) lookup',
+                ],
+            ],
+        ],
+        'techStack' => [
+            'frontend' => [
+                'title' => 'Frontend Technologies',
+                'items' => [
+                    'reactTypeScript' => 'React 18 with TypeScript',
+                    'chakraUI' => 'Chakra UI for modern design',
+                    'reactRouter' => 'React Router for navigation',
+                    'reactHookForm' => 'React Hook Form for forms',
+                    'i18next' => 'i18next for internationalization',
+                    'axios' => 'Axios for API communication',
+                    'zod' => 'Zod for validation',
+                ],
+            ],
+            'backend' => [
+                'title' => 'Backend Technologies',
+                'items' => [
+                    'laravel' => 'Laravel 11 PHP Framework',
+                    'restfulAPI' => 'RESTful API with Swagger docs',
+                    'sqlite' => 'SQLite database',
+                    'multiLanguage' => 'Multi-language support',
+                    'algorithms' => 'Optimized anagram algorithms',
+                    'errorHandling' => 'Comprehensive error handling',
+                    'monitoring' => 'Performance monitoring',
+                ],
+            ],
+        ],
+        'performance' => [
+            'title' => 'Performance Highlights',
+            'metrics' => [
+                'searchTime' => [
+                    'value' => '<100ms',
+                    'label' => 'Average search time',
+                ],
+                'wordsSupported' => [
+                    'value' => '500K+',
+                    'label' => 'Words supported',
+                ],
+                'languagesSupported' => [
+                    'value' => '4',
+                    'label' => 'Languages supported',
+                ],
+                'uptime' => [
+                    'value' => '99.9%',
+                    'label' => 'Uptime reliability',
+                ],
+            ],
+        ],
+        'gettingStarted' => [
+            'title' => 'Getting Started',
+            'steps' => [
+                'importDatabase' => [
+                    'title' => 'Import Word Database',
+                    'description' => 'Start by importing a word list through the Import page. You can use the default Estonian wordlist or upload your own.',
+                ],
+                'searchAnagrams' => [
+                    'title' => 'Search for Anagrams',
+                    'description' => 'Enter any word in the search page to find all possible anagrams instantly using our optimized algorithms.',
+                ],
+                'exploreAnalyze' => [
+                    'title' => 'Explore and Analyze',
+                    'description' => 'Use the statistics page to analyze your wordbase and view search history and discover word patterns.',
+                ],
+            ],
+        ],
+        'apiDocumentation' => [
+            'title' => 'API Documentation',
+            'description' => 'This application uses a Laravel-based REST API with comprehensive documentation available through Swagger/OpenAPI.',
+            'linkLabel' => 'API Documentation:',
+            'viewDocs' => 'View API Docs',
+        ],
+    ],
+
+    // Home page UI elements
+    'home' => [
+        'statistics' => [
+            'totalWords' => 'Total Words',
+            'inDatabase' => 'in database',
+            'uniqueAnagrams' => 'Unique Anagrams',
+            'combinations' => 'combinations',
+            'mostAnagrams' => 'Most Anagrams',
+            'for' => 'for',
+            'avgSearchTime' => 'Avg Search Time',
+            'perSearch' => 'per search',
+        ],
+        'features' => [
+            'fastSearch' => 'Optimized algorithms for instant anagram detection',
+            'importDatabase' => 'Import your own word lists to customize the search database',
+            'modernInterface' => 'Modern, responsive interface built with React and Chakra UI',
+        ],
+        'readyToSearch' => 'Ready to Search!',
+        'databaseLoaded' => 'Your word database is loaded with {{count}} words. Start finding anagrams now!',
+        'startSearching' => 'Start Searching',
+    ],
+
+    // Footer
+    'footer' => [
+        'copyright' => '2025 Estonian Anagram Finder. Made with ❤️ for Estonian language.',
+    ],
+
+    // Anagram-specific messages (for API responses)
+    'anagrams' => [
+        'found' => 'Found :count anagram(s) for ":word"',
+        'none_found' => 'No anagrams found for ":word"',
+        'search_completed' => 'Anagram search completed',
+        'invalid_word' => 'Invalid word provided',
+        'word_too_long' => 'Word too long. Maximum length is :max characters',
+        'word_too_short' => 'Word too short. Minimum length is :min characters',
+        'empty_word' => 'Word parameter cannot be empty',
+        'processing_error' => 'Error processing word ":word"',
+        'unicode_support' => 'Full Unicode support enabled',
+        'estonian_characters' => 'Estonian characters detected: :chars',
     ],
 
     // Advanced wordbase messages
