@@ -23,6 +23,7 @@ return [
         'delete' => 'Kustuta',
         'edit' => 'Muuda',
         'close' => 'Sulge',
+        'language' => 'Keel',
     ],
 
     // Navigatsioonielemendid

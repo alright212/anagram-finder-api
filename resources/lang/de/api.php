@@ -23,6 +23,7 @@ return [
         'delete' => 'Löschen',
         'edit' => 'Bearbeiten',
         'close' => 'Schließen',
+        'language' => 'Sprache',
     ],
 
     // Navigationselemente
