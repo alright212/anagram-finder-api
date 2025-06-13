@@ -1,40 +1,40 @@
 <?php
 
 return [
-    // General API messages
-    'welcome' => 'Tere tulemast Anagrammi Otsija API-sse',
-    'success' => 'Toiming lõpetatud edukalt',
-    'error' => 'Ilmnes viga',
+    // Üldised API teated
+    'welcome' => 'Tere tulemast Anagrammide Leidja API-sse',
+    'success' => 'Toiming edukalt lõpule viidud',
+    'error' => 'Tekkis viga',
     'not_found' => 'Ressurssi ei leitud',
     'invalid_request' => 'Vigane päring',
-    'service_unavailable' => 'Teenus ajutiselt kättesaamatu',
+    'service_unavailable' => 'Teenus on ajutiselt kättesaamatu',
 
-    // Common UI elements
+    // Levinud kasutajaliidese elemendid
     'common' => [
-        'search' => 'Otsing',
+        'search' => 'Otsi',
         'import' => 'Impordi',
         'about' => 'Teave',
         'home' => 'Avaleht',
         'loading' => 'Laadimine...',
         'error' => 'Viga',
         'success' => 'Õnnestus',
-        'cancel' => 'Loobu',
+        'cancel' => 'Tühista',
         'save' => 'Salvesta',
         'delete' => 'Kustuta',
         'edit' => 'Muuda',
         'close' => 'Sulge',
     ],
 
-    // Navigation elements
+    // Navigatsioonielemendid
     'navigation' => [
-        'title' => 'Eesti anagrammide otsija',
+        'title' => 'Eesti Anagrammide Leidja',
         'subtitle' => 'Leia sõnade anagramme kiirelt ja lihtsalt',
     ],
 
-    // Search interface
+    // Otsinguliides
     'search' => [
-        'title' => 'Anagrammide otsing',
-        'description' => 'Sisesta eesti sõna, et leida selle anagramme',
+        'title' => 'Anagrammi otsing',
+        'description' => 'Sisesta eestikeelne sõna, et leida selle anagramme',
         'placeholder' => 'Sisesta sõna anagrammide leidmiseks...',
         'searchButton' => 'Otsi Anagramme',
         'noResults' => 'Anagramme ei leitud',
@@ -42,161 +42,161 @@ return [
         'results' => [
             'title' => 'Leitud anagrammid:',
             'count' => 'Kokku: {{count}} anagrammi',
-            'executionTime' => 'Otsinguaeg: {{time}}ms',
+            'executionTime' => 'Otsingu aeg: {{time}}ms',
             'algorithm' => 'Algoritm: {{algorithm}}',
         ],
         'tips' => [
-            'title' => '💡 Otsinguvihjed',
+            'title' => '💡 Otsingu nipid',
             'items' => [
-                'estonianWords' => 'Kasuta eesti sõnu parimate tulemuste saamiseks',
+                'estonianWords' => 'Parimate tulemuste saamiseks kasuta eestikeelseid sõnu',
                 'minimumLength' => 'Sõnad peavad olema vähemalt 2 tähemärki pikad',
-                'clickResults' => 'Klõpsa mis tahes anagrammi tulemusel, et otsida selle anagramme',
-                'useHistory' => 'Kasuta oma hiljutiseid otsinguid kiireks juurdepääsuks',
+                'clickResults' => 'Klõpsa ükskõik millisel anagrammi tulemusel, et otsida selle anagramme',
+                'useHistory' => 'Kiireks juurdepääsuks kasuta oma hiljutisi otsinguid',
             ],
         ],
     ],
 
-    // Error messages
+    // Veateated
     'errors' => [
         'networkError' => 'Võrguühenduse viga',
         'serverError' => 'Serveri viga',
         'invalidInput' => 'Vigane sisend',
         'wordNotFound' => 'Sõna ei leitud',
-        'importFailed' => 'Import ebaõnnestus',
+        'importFailed' => 'Importimine ebaõnnestus',
     ],
 
-    // Wordbase management
+    // Sõnabaasi haldus
     'wordbase' => [
         'title' => 'Sõnabaasi import',
         'status' => 'Sõnabaasi olek',
-        'totalWords' => 'Kokku sõnu: {{count}}',
+        'totalWords' => 'Sõnu kokku: {{count}}',
         'lastImport' => 'Viimane import: {{date}}',
         'statusLabels' => [
-            'total_words' => 'Kokku sõnu',
+            'total_words' => 'Sõnu Kokku',
             'languages' => 'Keeled',
-            'last_updated' => 'Viimati uuendatud',
+            'last_updated' => 'Viimati Uuendatud',
         ],
         'import' => [
-            'title' => 'Sõnabaasi import',
+            'title' => 'Impordi sõnabaas',
             'description' => 'Impordi uusi sõnu sõnabaasi anagrammide genereerimiseks.',
             'instructions' => [
-                'title' => 'Importimise juhised',
-                'plain_text' => 'Tavaline tekst: Sisesta üks sõna rea kohta',
-                'json_format' => 'JSON formaat: Anna stringide massiiv nagu ["sõna1", "sõna2"]',
-                'language_selection' => 'Keele valik: Vali sõnadele sobiv keel',
-                'duplicates' => 'Duplikaadid: Dubleeritud sõnad jäetakse automaatselt vahele',
-                'processing_time' => 'Töötlemise aeg: Suurte importide puhul võib kuluda mitu sekundit',
+                'title' => 'Impordi juhised',
+                'plain_text' => 'Lihtteksti Formaat: Sisesta üks sõna rea kohta',
+                'json_format' => 'JSON Formaat: Esita stringide massiiv nagu ["sõna1", "sõna2"]',
+                'language_selection' => 'Keele Valik: Vali sõnadele sobiv keel',
+                'duplicates' => 'Duplikaadid: Korduvad sõnad jäetakse automaatselt vahele',
+                'processing_time' => 'Töötlemisaeg: Suurte importide puhul võib kuluda mitu sekundit',
             ],
         ],
         'importForm' => [
-            'title' => 'Impordi sõnad',
-            'content' => 'Sõnad (iga sõna uuel real)',
+            'title' => 'Impordi sõnu',
+            'content' => 'Sõnad (üks rea kohta)',
             'format' => 'Formaat',
             'language' => 'Keel',
-            'importButton' => 'Impordi sõnad',
-            'placeholder' => 'Sisesta impordiks mõeldud sõnad (üks sõna rea kohta tekstiformaadi puhul või JSON massiiv JSON formaadi puhul)',
-            'failed' => 'Import ebaõnnestus',
+            'importButton' => 'Impordi Sõnad',
+            'placeholder' => 'Sisesta imporditavad sõnad (tekstivormingus üks rea kohta või JSON-vormingus JSON-massiiv)',
+            'failed' => 'Importimine ebaõnnestus',
         ],
         'formats' => [
-            'plaintext' => 'Tavaline tekst',
+            'plaintext' => 'Lihttekst',
             'json' => 'JSON',
         ],
         'languages' => [
-            'et' => 'Eesti keel',
-            'en' => 'Inglise keel',
-            'de' => 'Saksa keel',
-            'fr' => 'Prantsuse keel',
+            'et' => 'Eesti',
+            'en' => 'Inglise',
+            'de' => 'Saksa',
+            'fr' => 'Prantsuse',
         ],
-        // Legacy API messages for backward compatibility
+        // Vananenud API teated tagasiühilduvuse tagamiseks
         'import_started' => 'Sõnabaasi import alustatud',
-        'import_completed' => 'Sõnabaasi import edukalt lõpetatud',
+        'import_completed' => 'Sõnabaasi import edukalt lõpule viidud',
         'import_failed' => 'Sõnabaasi import ebaõnnestus',
-        'already_exists' => 'Sõnabaas on juba olemas. Kasuta force=true ülekirjutamiseks',
-        'not_ready' => 'Sõnabaas pole saadaval. Palun impordi kõigepealt sõnabaas',
-        'clearing' => 'Olemasoleva sõnabaasi kustutamine',
-        'cleared' => 'Sõnabaas edukalt kustutatud',
+        'already_exists' => 'Sõnabaas on juba olemas. Ülekirjutamiseks kasuta force=true',
+        'not_ready' => 'Sõnabaas pole saadaval. Palun impordi esmalt sõnabaas',
+        'clearing' => 'Olemasoleva sõnabaasi tühjendamine',
+        'cleared' => 'Sõnabaas edukalt tühjendatud',
         'empty' => 'Sõnabaas on tühi',
-        'status_check' => 'Sõnabaasi staatuse kontroll',
+        'status_check' => 'Sõnabaasi oleku kontrollimine',
         'words_imported' => ':count sõna edukalt imporditud',
-        'source_unreachable' => 'Sõnaallikas kättesaamatu',
+        'source_unreachable' => 'Sõnaallikas pole kättesaadav',
         'invalid_source' => 'Vigased sõnaallika andmed',
         'processing_words' => 'Sõnade töötlemine',
         'optimizing_database' => 'Andmebaasi indeksite optimeerimine',
-        'statistics_generated' => 'Importimise statistika genereeritud',
+        'statistics_generated' => 'Impordi statistika genereeritud',
     ],
 
-    // About page
+    // Teave leht
     'about' => [
-        'title' => 'Anagrammide otsija kohta',
-        'description' => 'See rakendus võimaldab teil leida eesti sõnade anagramme kasutades täiustatud algoritme.',
+        'title' => 'Teave anagrammide leidja kohta',
+        'description' => 'See rakendus võimaldab teil leida eestikeelsete sõnade anagramme, kasutades täiustatud algoritme.',
         'features' => [
-            'title' => 'Omadused',
+            'title' => 'Funktsioonid',
             'items' => [
-                'fastSearch' => 'Kiire anagrammide otsing',
-                'fastSearchDescription' => 'Optimeeritud algoritmid hetkeliseks anagrammide tuvastamiseks',
+                'fastSearch' => 'Kiire anagrammi otsing',
+                'fastSearchDescription' => 'Optimeeritud algoritmid koheseks anagrammide tuvastamiseks',
                 'multilingualSupport' => 'Mitmekeelne tugi',
                 'multilingualSupportDescription' => 'Tugi eesti, inglise, saksa ja prantsuse keelele',
-                'customDatabase' => 'Kohandatav sõnabaas',
+                'customDatabase' => 'Kohandatav sõnade andmebaas',
                 'customDatabaseDescription' => 'Impordi oma sõnaloendeid ja kohanda andmebaasi',
-                'modernInterface' => 'Moodne kasutajaliides',
-                'modernInterfaceDescription' => 'Ehitatud React 18, TypeScripti ja Chakra UI abil',
+                'modernInterface' => 'Kaasaegne kasutajaliides',
+                'modernInterfaceDescription' => 'Ehitatud React 18, TypeScripti ja Chakra UI-ga',
                 'realTimeStats' => 'Reaalajas statistika',
-                'realTimeStatsDescription' => 'Vaata otsingu jõudlust ja sõnabaasi statistikat',
+                'realTimeStatsDescription' => 'Vaata otsingu jõudlust ja sõnade andmebaasi statistikat',
             ],
         ],
         'algorithm' => [
             'title' => 'Algoritm',
-            'description' => 'Kasutame optimeeritud algoritme, mis tagavad kiire ja täpse anagrammide leidmise.',
+            'description' => 'Kasutame optimeeritud algoritme, mis tagavad kiire ja täpse anagrammide tuvastamise.',
             'types' => [
                 'characterFrequency' => [
                     'name' => 'Tähemärkide sageduse analüüs',
-                    'description' => 'Kasutab tähemärkide sageduse lugemist tõhusaks anagrammide tuvastamiseks',
+                    'description' => 'Kasutab tähemärkide sageduse loendamist tõhusaks anagrammide tuvastamiseks',
                     'complexity' => 'O(n + m)',
                 ],
                 'sortingBased' => [
                     'name' => 'Sorteerimispõhine võrdlus',
-                    'description' => 'Sorteerib tähemärke anagrammide leidmiseks stringi võrdluse kaudu',
+                    'description' => 'Sorteerib tähemärke, et leida anagramme stringide võrdluse kaudu',
                     'complexity' => 'O(n log n)',
                 ],
                 'hashBased' => [
-                    'name' => 'Räsi-põhine otsing',
-                    'description' => 'Eelarvutatud räsi tabelid ülikiireks anagrammide leidmiseks',
+                    'name' => 'Räsipõhine otsing',
+                    'description' => 'Eelnevalt arvutatud räsitabelid ülikiireks anagrammide leidmiseks',
                     'complexity' => 'O(1) otsing',
                 ],
             ],
         ],
         'techStack' => [
             'frontend' => [
-                'title' => 'Frontend tehnoloogiad',
+                'title' => 'Esiosa tehnoloogiad',
                 'items' => [
                     'reactTypeScript' => 'React 18 koos TypeScriptiga',
-                    'chakraUI' => 'Chakra UI moodsaks disainiks',
+                    'chakraUI' => 'Chakra UI kaasaegse disaini jaoks',
                     'reactRouter' => 'React Router navigeerimiseks',
                     'reactHookForm' => 'React Hook Form vormide jaoks',
                     'i18next' => 'i18next rahvusvahelistumiseks',
-                    'zod' => 'Zod valideerimiseks',
                     'axios' => 'Axios API suhtluseks',
+                    'zod' => 'Zod valideerimiseks',
                 ],
             ],
             'backend' => [
-                'title' => 'Backend tehnoloogiad',
+                'title' => 'Tagosa tehnoloogiad',
                 'items' => [
                     'laravel' => 'Laravel 11 PHP raamistik',
-                    'restfulAPI' => 'RESTful API Swagger dokumentatsiooniga',
+                    'restfulAPI' => 'RESTful API koos Swaggeri dokumentatsiooniga',
                     'sqlite' => 'SQLite andmebaas',
                     'multiLanguage' => 'Mitmekeelne tugi',
                     'algorithms' => 'Optimeeritud anagrammi algoritmid',
-                    'errorHandling' => 'Põhjalik vigade käsitlemine',
+                    'errorHandling' => 'Põhjalik veahaldus',
                     'monitoring' => 'Jõudluse monitooring',
                 ],
             ],
         ],
         'performance' => [
-            'title' => 'Jõudluse esiletõstmised',
+            'title' => 'Jõudluse tipphetked',
             'metrics' => [
                 'searchTime' => [
                     'value' => '<100ms',
-                    'label' => 'Keskmine otsingaeg',
+                    'label' => 'Keskmine otsingu aeg',
                 ],
                 'wordsSupported' => [
                     'value' => '500K+',
@@ -204,7 +204,7 @@ return [
                 ],
                 'languagesSupported' => [
                     'value' => '4',
-                    'label' => 'Toetatud keeled',
+                    'label' => 'Toetatud keeli',
                 ],
                 'uptime' => [
                     'value' => '99.9%',
@@ -216,148 +216,148 @@ return [
             'title' => 'Alustamine',
             'steps' => [
                 'importDatabase' => [
-                    'title' => 'Impordi sõnabaas',
-                    'description' => 'Alusta sõnaloendi importimisest läbi impordi lehe. Võid kasutada vaikimisi eesti sõnaloendit või laadida oma oma.',
+                    'title' => 'Impordi sõnade andmebaas',
+                    'description' => 'Alusta sõnaloendi importimisega Impordi lehe kaudu. Saad kasutada vaikimisi eesti sõnastikku või laadida üles enda oma.',
                 ],
                 'searchAnagrams' => [
                     'title' => 'Otsi anagramme',
-                    'description' => 'Sisesta mis tahes sõna otsingu lehel, et leida kõik võimalikud anagrammid kohe kasutades meie optimeeritud algoritme.',
+                    'description' => 'Sisesta otsingulehele suvaline sõna, et leida koheselt kõik võimalikud anagrammid, kasutades meie optimeeritud algoritme.',
                 ],
                 'exploreAnalyze' => [
                     'title' => 'Uuri ja analüüsi',
-                    'description' => 'Kasuta statistika lehte oma sõnabaasi analüüsimiseks ja vaata otsingu ajalugu ning avasta sõnamalle.',
+                    'description' => 'Kasuta statistika lehte oma sõnabaasi analüüsimiseks, otsinguajaloo vaatamiseks ja sõnamustrite avastamiseks.',
                 ],
             ],
         ],
         'apiDocumentation' => [
             'title' => 'API dokumentatsioon',
-            'description' => 'See rakendus kasutab Laravel-põhist REST API-t koos põhjaliku dokumentatsiooniga Swagger/OpenAPI kaudu.',
-            'linkLabel' => 'API dokumentatsioon:',
-            'viewDocs' => 'Vaata API dokumente',
+            'description' => 'See rakendus kasutab Laravelil põhinevat REST API-d, mille põhjalik dokumentatsioon on saadaval Swagger/OpenAPI kaudu.',
+            'linkLabel' => 'API Dokumentatsioon:',
+            'viewDocs' => 'Vaata API Dokke',
         ],
     ],
 
-    // Home page UI elements
+    // Avalehe kasutajaliidese elemendid
     'home' => [
         'statistics' => [
-            'totalWords' => 'Kokku sõnu',
+            'totalWords' => 'Sõnu Kokku',
             'inDatabase' => 'andmebaasis',
-            'uniqueAnagrams' => 'Unikaalseid anagramme',
-            'combinations' => 'kombinatsioone',
-            'mostAnagrams' => 'Enim anagramme',
+            'uniqueAnagrams' => 'Unikaalseid Anagramme',
+            'combinations' => 'kombinatsiooni',
+            'mostAnagrams' => 'Enim Anagramme',
             'for' => 'sõnale',
-            'avgSearchTime' => 'Keskmine otsingaeg',
+            'avgSearchTime' => 'Keskmine Otsingu Aeg',
             'perSearch' => 'otsingu kohta',
         ],
         'features' => [
-            'fastSearch' => 'Optimeeritud algoritmid hetkeliseks anagrammide tuvastamiseks',
-            'importDatabase' => 'Impordi oma sõnaloendeid ja kohanda andmebaasi',
-            'modernInterface' => 'Moodne, reageerimisvõimeline liides, mis on ehitatud Reacti ja Chakra UI abil',
+            'fastSearch' => 'Optimeeritud algoritmid koheseks anagrammide tuvastamiseks',
+            'importDatabase' => 'Impordi oma sõnaloendeid otsinguandmebaasi kohandamiseks',
+            'modernInterface' => 'Kaasaegne, reageeriv liides, mis on ehitatud Reacti ja Chakra UI-ga',
         ],
-        'readyToSearch' => 'Valmis otsimiseks!',
-        'databaseLoaded' => 'Teie sõnabaas on laaditud {{count}} sõnaga. Alusta anagrammide otsimist nüüd!',
-        'startSearching' => 'Alusta otsimist',
+        'readyToSearch' => 'Otsinguks Valmis!',
+        'databaseLoaded' => 'Sinu sõnade andmebaas on laetud {{count}} sõnaga. Alusta anagrammide leidmist kohe!',
+        'startSearching' => 'Alusta Otsingut',
     ],
 
-    // Footer
+    // Jalus
     'footer' => [
-        'copyright' => '2025 Eesti anagrammide otsija. Tehtud ❤️ eesti keele jaoks.',
+        'copyright' => '2025 Eesti Anagrammide Leidja. Tehtud ❤️-ga eesti keele jaoks.',
     ],
 
-    // Anagram-specific messages (for API responses)
+    // Anagrammi-spetsiifilised teated (API vastuste jaoks)
     'anagrams' => [
-        'found' => 'Leiti :count anagramm(i) sõnale ":word"',
+        'found' => 'Leitud :count anagrammi sõnale ":word"',
         'none_found' => 'Sõnale ":word" anagramme ei leitud',
-        'search_completed' => 'Anagrammi otsing lõpetatud',
+        'search_completed' => 'Anagrammi otsing lõpule viidud',
         'invalid_word' => 'Vigane sõna',
         'word_too_long' => 'Sõna on liiga pikk. Maksimaalne pikkus on :max tähemärki',
         'word_too_short' => 'Sõna on liiga lühike. Minimaalne pikkus on :min tähemärki',
-        'empty_word' => 'Sõna parameeter ei saa olla tühi',
+        'empty_word' => 'Sõna parameeter ei tohi olla tühi',
         'processing_error' => 'Viga sõna ":word" töötlemisel',
-        'unicode_support' => 'Täielik Unicode tugi lubatud',
-        'estonian_characters' => 'Eesti tähemärgid tuvastatud: :chars',
+        'unicode_support' => 'Täielik Unicode tugi on lubatud',
+        'estonian_characters' => 'Tuvastatud eesti tähemärgid: :chars',
     ],
 
-    // Advanced wordbase messages
+    // Täiustatud sõnabaasi teated
     'advanced_wordbase' => [
-        'unicode_processing' => 'Täiustatud Unicode töötlus lubatud',
-        'estonian_optimization' => 'Eesti keele optimeerimine aktiivne',
-        'batch_processing' => 'Töödeldakse pakki :current / :total',
-        'memory_optimization' => 'Mälu optimeerimine käib',
-        'cache_management' => 'Puhvri haldus aktiivne',
-        'performance_tuning' => 'Jõudluse häälestus rakendatud',
-        'unicode_words_found' => 'Leitud :count sõna Unicode märkidega',
-        'canonical_forms_generated' => 'Genereeritud :count unikaalset kanoonilise vormi',
+        'unicode_processing' => 'Täiustatud Unicode töötlemine on lubatud',
+        'estonian_optimization' => 'Eesti keele optimeerimine on aktiivne',
+        'batch_processing' => 'Töödeldakse paketti :current/:total',
+        'memory_optimization' => 'Mälu optimeerimine on pooleli',
+        'cache_management' => 'Vahemälu haldamine on aktiivne',
+        'performance_tuning' => 'Jõudluse häälestamine on rakendatud',
+        'unicode_words_found' => 'Leitud :count sõna Unicode tähemärkidega',
+        'canonical_forms_generated' => 'Genereeritud :count unikaalset kanoonilist vormi',
         'index_creation' => 'Optimeeritud andmebaasi indeksite loomine',
-        'algorithm_cache_cleared' => 'Algoritmi puhver tühjendatud mälu halduseks',
+        'algorithm_cache_cleared' => 'Algoritmi vahemälu tühjendatud mälu haldamiseks',
     ],
 
-    // Validation messages
+    // Valideerimisteated
     'validation' => [
         'required' => 'Väli :attribute on kohustuslik',
         'boolean' => 'Väli :attribute peab olema tõene või väär',
-        'string' => 'Väli :attribute peab olema tekst',
+        'string' => 'Väli :attribute peab olema string',
         'max_length' => 'Väli :attribute ei tohi ületada :max tähemärki',
-        'min_length' => 'Väli :attribute peab olema vähemalt :min tähemärki',
+        'min_length' => 'Väli :attribute peab olema vähemalt :min tähemärki pikk',
         'invalid_encoding' => 'Väli :attribute sisaldab vigast UTF-8 kodeeringut',
     ],
 
-    // Error codes
+    // Veakoodid
     'error_codes' => [
         'INVALID_WORD' => 'Vigane sõna parameeter',
-        'WORD_TOO_LONG' => 'Sõna ületab maksimaalse pikkuse',
-        'WORD_TOO_SHORT' => 'Sõna on minimaalse pikkuse alt',
-        'WORDBASE_NOT_READY' => 'Sõnabaas pole valmis',
+        'WORD_TOO_LONG' => 'Sõna ületab maksimaalset pikkust',
+        'WORD_TOO_SHORT' => 'Sõna on lühem kui minimaalne pikkus',
+        'WORDBASE_NOT_READY' => 'Sõnabaas ei ole valmis',
         'WORDBASE_EXISTS' => 'Sõnabaas on juba olemas',
         'IMPORT_FAILED' => 'Importimine ebaõnnestus',
         'INVALID_INPUT' => 'Vigane sisend',
-        'PROCESSING_ERROR' => 'Töötlemise viga',
+        'PROCESSING_ERROR' => 'Töötlemisel tekkis viga',
         'UNICODE_ERROR' => 'Unicode töötlemise viga',
-        'DATABASE_ERROR' => 'Andmebaasi toimingu viga',
-        'MEMORY_ERROR' => 'Mälu limiit ületatud',
+        'DATABASE_ERROR' => 'Andmebaasi operatsiooni viga',
+        'MEMORY_ERROR' => 'Mälulimiit ületatud',
         'NETWORK_ERROR' => 'Võrguühenduse viga',
     ],
 
-    // Statistics and metadata
+    // Statistika ja metaandmed
     'stats' => [
-        'total_words' => 'Kokku sõnu',
-        'unique_canonical_forms' => 'Unikaalseid kanoonilisi vorme',
+        'total_words' => 'Sõnu kokku',
+        'unique_canonical_forms' => 'Unikaalsed kanoonilised vormid',
         'average_word_length' => 'Keskmine sõna pikkus',
         'min_word_length' => 'Minimaalne sõna pikkus',
         'max_word_length' => 'Maksimaalne sõna pikkus',
-        'unicode_words' => 'Sõnad Unicode märkidega',
+        'unicode_words' => 'Unicode tähemärkidega sõnad',
         'ascii_words' => 'Ainult ASCII sõnad',
-        'estonian_words' => 'Sõnad eesti tähemärkidega',
+        'estonian_words' => 'Eesti tähemärkidega sõnad',
         'algorithm_type' => 'Algoritmi tüüp',
-        'cache_enabled' => 'Puhverdus lubatud',
-        'processing_time' => 'Töötlemise aeg',
-        'memory_usage' => 'Mälu kasutus',
+        'cache_enabled' => 'Vahemälu lubatud',
+        'processing_time' => 'Töötlemisaeg',
+        'memory_usage' => 'Mälukasutus',
         'database_size' => 'Andmebaasi suurus',
         'last_updated' => 'Viimati uuendatud',
         'wordbase_ready' => 'Sõnabaas valmis',
         'optimization_level' => 'Optimeerimise tase',
     ],
 
-    // Algorithm messages
+    // Algoritmi teated
     'algorithm' => [
-        'sorting' => 'Tähemärkide sortimine algoritm',
+        'sorting' => 'Tähemärkide sorteerimise algoritm',
         'unicode_optimized' => 'Unicode-optimeeritud algoritm',
         'frequency_map' => 'Tähemärkide sageduse kaardistamine',
-        'cache_hit' => 'Puhvri tabamus kanoonilisele vormile',
-        'cache_miss' => 'Puhvri möödalask, kanoonilise vormi genereerimine',
+        'cache_hit' => 'Vahemälu tabamus kanoonilise vormi jaoks',
+        'cache_miss' => 'Vahemälust möödalask, genereeritakse kanooniline vorm',
         'normalization_applied' => 'Unicode normaliseerimine rakendatud',
         'estonian_mapping' => 'Eesti tähemärkide kaardistamine rakendatud',
-        'grapheme_processing' => 'Grafeemi klastrite töötlemine',
-        'collation_sorting' => 'Unicode sorteerimise võrdlus',
+        'grapheme_processing' => 'Grafeemiklastrite töötlemine',
+        'collation_sorting' => 'Unicode kollatsiooni sorteerimine',
     ],
 
-    // Time and performance
+    // Aeg ja jõudlus
     'performance' => [
-        'search_time' => 'Otsing lõpetatud :time ms jooksul',
-        'import_time' => 'Import lõpetatud :time sekundi jooksul',
-        'cache_performance' => 'Puhvri tabamuste suhe: :ratio%',
-        'memory_peak' => 'Mälu kasutuse tipp: :memory',
-        'batch_progress' => 'Pakk :current/:total töödeldud',
+        'search_time' => 'Otsing lõpetati :time ms-ga',
+        'import_time' => 'Import lõpetati :time sekundiga',
+        'cache_performance' => 'Vahemälu tabamuste suhe: :ratio%',
+        'memory_peak' => 'Mälu tippkasutus: :memory',
+        'batch_progress' => 'Partii :current/:total töödeldud',
         'optimization_applied' => 'Jõudluse optimeerimised rakendatud',
         'index_created' => 'Andmebaasi indeks loodud: :index',
     ],
