@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Routing\Controller as BaseController;
+
 /**
  * @OA\Info(
  *     title="Anagram Finder API",
@@ -27,12 +29,12 @@ namespace App\Http\Controllers;
  *     name="Advanced Wordbase",
  *     description="Advanced operations for managing the word database with Unicode optimization"
  * )
- * @OA\Tag(
+ * @OA\Tag(     
  *     name="Locale",
  *     description="Internationalization and locale management operations"
  * )
  */
-abstract class Controller
+abstract class Controller extends BaseController
 {
     //
 }

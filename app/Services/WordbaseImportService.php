@@ -310,14 +310,16 @@ class WordbaseImportService
             $batches = array_chunk($words, self::BATCH_SIZE);
             
             foreach ($batches as $batch) {
-                $processedWords = $this->processWordBatch($batch);
+                $processedWords = $this->processWords($batch);
                 
                 // Check for duplicates before inserting
                 $newWords = [];
-                foreach ($processedWords as $word) {
-                    if (!$this->wordRepository->wordExists($word)) {
+                foreach ($processedWords as $wordData) {
+                    if (!$this->wordRepository->wordExists($wordData['original_word'])) {
                         $newWords[] = [
-                            'word' => $word,
+                            'original_word' => $wordData['original_word'],
+                            'canonical_form' => $wordData['canonical_form'],
+                            'length' => $wordData['length'],
                             'language' => $language,
                             'created_at' => now(),
                             'updated_at' => now(),
