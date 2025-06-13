@@ -94,6 +94,71 @@ class WordbaseController extends Controller
      */
     public function import(WordbaseImportRequest $request): JsonResponse
     {
+        // Check if this is a custom word import or default import
+        if ($request->isCustomImport()) {
+            return $this->importCustomWords($request);
+        } else {
+            return $this->importDefaultWordbase($request);
+        }
+    }
+
+    /**
+     * Import custom words provided by the user
+     */
+    private function importCustomWords(WordbaseImportRequest $request): JsonResponse
+    {
+        $words = $request->input('words');
+        $format = $request->input('format', 'text');
+        $language = $request->input('language', 'et');
+
+        // Parse words based on format
+        $wordArray = [];
+        if ($format === 'json') {
+            $decoded = json_decode($words, true);
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                return $this->errorResponse(
+                    'Invalid JSON format',
+                    'INVALID_JSON',
+                    400
+                );
+            }
+            $wordArray = is_array($decoded) ? $decoded : [$decoded];
+        } else {
+            // Text format - split by lines, spaces, or commas
+            $wordArray = preg_split('/[\r\n,\s]+/', trim($words), -1, PREG_SPLIT_NO_EMPTY);
+        }
+
+        // Import the custom words
+        $result = $this->importService->importCustomWords($wordArray, $language);
+
+        if ($result['success']) {
+            $responseData = [
+                'words_imported' => $result['words_imported'],
+                'duplicates_skipped' => $result['duplicates_skipped'] ?? 0,
+                'total_processed' => count($wordArray),
+                'timestamp' => now()->toISOString(),
+            ];
+
+            return $this->successResponse(
+                'wordbase.custom_import_completed',
+                $responseData,
+                201,
+                ['count' => $result['words_imported']]
+            );
+        }
+
+        return $this->errorResponse(
+            'wordbase.import_failed',
+            'IMPORT_FAILED',
+            500
+        );
+    }
+
+    /**
+     * Import default Estonian wordbase
+     */
+    private function importDefaultWordbase(WordbaseImportRequest $request): JsonResponse
+    {
         // Validate request parameters
         $force = $request->boolean('force', false);
 

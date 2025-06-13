@@ -43,4 +43,14 @@ interface WordRepositoryInterface
      * Get words containing Unicode characters (Estonian specific)
      */
     public function getUnicodeWords(int $limit = 100): array;
+
+    /**
+     * Check if a word already exists in the wordbase
+     */
+    public function wordExists(string $word): bool;
+
+    /**
+     * Insert multiple words in batch for performance
+     */
+    public function insertBatch(array $words): bool;
 }

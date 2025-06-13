@@ -13,6 +13,7 @@ class Word extends Model
         'original_word',
         'canonical_form',
         'length',
+        'language',
     ];
 
     protected $casts = [
@@ -22,7 +23,7 @@ class Word extends Model
     /**
      * Scope for finding anagrams of a given canonical form
      */
-    public function scopeAnagramsOf($query, string $canonicalForm, string $excludeWord = null)
+    public function scopeAnagramsOf($query, string $canonicalForm, ?string $excludeWord = null)
     {
         $query->where('canonical_form', $canonicalForm);
         

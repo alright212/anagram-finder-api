@@ -148,4 +148,35 @@ class EloquentWordRepository implements WordRepositoryInterface
                 ->pluck('original_word')
                 ->toArray();
     }
+
+    public function wordExists(string $word): bool
+    {
+        return Word::whereRaw('LOWER(original_word) = LOWER(?)', [mb_strtolower($word, 'UTF-8')])
+                   ->exists();
+    }
+
+    public function insertBatch(array $words): bool
+    {
+        try {
+            // Use chunking for large datasets to avoid memory issues
+            $chunks = array_chunk($words, 1000);
+            
+            DB::transaction(function () use ($chunks) {
+                foreach ($chunks as $chunk) {
+                    DB::table('words')->insert($chunk);
+                }
+            });
+
+            // Clear relevant caches after insert
+            Cache::flush();
+            
+            return true;
+        } catch (\Exception $e) {
+            Log::error('Batch insert failed', [
+                'error' => $e->getMessage(),
+                'word_count' => count($words)
+            ]);
+            return false;
+        }
+    }
 }

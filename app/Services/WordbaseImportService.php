@@ -187,6 +187,46 @@ class WordbaseImportService
     }
 
     /**
+     * Process a batch of custom words
+     * 
+     * @param array $words Array of words to process
+     * @return array Array of processed words
+     */
+    private function processWordBatch(array $words): array
+    {
+        $processedWords = [];
+        $uniqueWords = array_unique($words); // Remove duplicates within batch
+
+        foreach ($uniqueWords as $word) {
+            // Skip empty words
+            if (empty(trim($word))) {
+                continue;
+            }
+
+            // Skip words that are too short (less than 2 characters)
+            if (mb_strlen($word, 'UTF-8') < 2) {
+                continue;
+            }
+
+            try {
+                // Process the word (filter, normalize, etc. if needed)
+                $processedWord = trim($word);
+                
+                // Add to processed words array
+                $processedWords[] = $processedWord;
+                
+            } catch (\Exception $e) {
+                Log::warning('Failed to process custom word', [
+                    'word' => $word,
+                    'error' => $e->getMessage()
+                ]);
+            }
+        }
+
+        return $processedWords;
+    }
+
+    /**
      * Parse wordlist content into individual words
      */
     private function parseWordlist(string $content): array
@@ -252,13 +292,108 @@ class WordbaseImportService
     }
 
     /**
-     * Get import status
+     * Import custom words provided by the user
+     */
+    public function importCustomWords(array $words, string $language = 'et'): array
+    {
+        try {
+            Log::info('Starting custom word import', [
+                'word_count' => count($words),
+                'language' => $language
+            ]);
+
+            $importedCount = 0;
+            $duplicatesSkipped = 0;
+            $totalWords = count($words);
+
+            // Process words in batches
+            $batches = array_chunk($words, self::BATCH_SIZE);
+            
+            foreach ($batches as $batch) {
+                $processedWords = $this->processWordBatch($batch);
+                
+                // Check for duplicates before inserting
+                $newWords = [];
+                foreach ($processedWords as $word) {
+                    if (!$this->wordRepository->wordExists($word)) {
+                        $newWords[] = [
+                            'word' => $word,
+                            'language' => $language,
+                            'created_at' => now(),
+                            'updated_at' => now(),
+                        ];
+                    } else {
+                        $duplicatesSkipped++;
+                    }
+                }
+
+                if (!empty($newWords)) {
+                    $this->wordRepository->insertBatch($newWords);
+                    $importedCount += count($newWords);
+                }
+
+                Log::info('Processed custom word batch', [
+                    'batch_size' => count($batch),
+                    'processed' => count($processedWords),
+                    'new_words' => count($newWords),
+                    'duplicates' => $duplicatesSkipped,
+                    'total_imported' => $importedCount
+                ]);
+            }
+
+            Log::info('Custom word import completed', [
+                'total_words' => $totalWords,
+                'imported' => $importedCount,
+                'duplicates_skipped' => $duplicatesSkipped,
+                'language' => $language
+            ]);
+
+            return [
+                'success' => true,
+                'words_imported' => $importedCount,
+                'duplicates_skipped' => $duplicatesSkipped,
+                'total_processed' => $totalWords,
+                'message' => "Custom word import completed: {$importedCount} words imported, {$duplicatesSkipped} duplicates skipped"
+            ];
+
+        } catch (\Exception $e) {
+            Log::error('Custom word import failed', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return [
+                'success' => false,
+                'words_imported' => 0,
+                'duplicates_skipped' => 0,
+                'total_processed' => 0,
+                'message' => 'Custom word import failed: ' . $e->getMessage()
+            ];
+        }
+    }
+
+    /**
+     * Get import status with frontend-compatible format
      */
     public function getImportStatus(): array
     {
+        $isEmpty = $this->wordRepository->isWordbaseEmpty();
+        $wordCount = $this->wordRepository->getWordCount();
+        
+        // Get the latest word's updated_at timestamp for last_updated
+        $latestWord = \App\Models\Word::latest('updated_at')->first();
+        $lastUpdated = $latestWord ? $latestWord->updated_at->toISOString() : null;
+        
         return [
-            'wordbase_exists' => !$this->wordRepository->isWordbaseEmpty(),
-            'word_count' => $this->wordRepository->getWordCount(),
+            // Frontend expected fields
+            'total_words' => $wordCount,
+            'status' => $isEmpty ? 'empty' : 'imported',
+            'last_updated' => $lastUpdated,
+            'languages_available' => $isEmpty ? [] : ['et'], // Estonian is default
+            
+            // Legacy fields for backward compatibility
+            'wordbase_exists' => !$isEmpty,
+            'word_count' => $wordCount,
             'source_url' => self::WORDLIST_URL,
         ];
     }
