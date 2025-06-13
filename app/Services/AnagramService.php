@@ -184,4 +184,19 @@ class AnagramService
             'is_estonian_chars' => $isEstonianChars
         ];
     }
+
+    /**
+     * Get words with the most anagrams
+     */
+    public function getWordsWithMostAnagrams(int $limit = 10): array
+    {
+        try {
+            return $this->wordRepository->getWordsWithMostAnagrams($limit);
+        } catch (\Exception $e) {
+            Log::error('Failed to get words with most anagrams', [
+                'error' => $e->getMessage()
+            ]);
+            return [];
+        }
+    }
 }

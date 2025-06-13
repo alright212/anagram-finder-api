@@ -179,4 +179,39 @@ class EloquentWordRepository implements WordRepositoryInterface
             return false;
         }
     }
+
+    /**
+     * Get words with the most anagrams
+     */
+    public function getWordsWithMostAnagrams(int $limit = 10): array
+    {
+        return Cache::remember('words_most_anagrams_' . $limit, self::CACHE_TTL, function () use ($limit) {
+            // Find canonical forms with the most words
+            $topCanonicalForms = DB::table('words')
+                ->select('canonical_form', DB::raw('COUNT(*) as anagram_count'))
+                ->groupBy('canonical_form')
+                ->having('anagram_count', '>', 1) // Only include groups with actual anagrams
+                ->orderBy('anagram_count', 'desc')
+                ->limit($limit)
+                ->get();
+
+            $results = [];
+            foreach ($topCanonicalForms as $canonicalForm) {
+                // Get all words for this canonical form
+                $words = Word::where('canonical_form', $canonicalForm->canonical_form)
+                    ->orderBy('original_word')
+                    ->pluck('original_word')
+                    ->toArray();
+
+                $results[] = [
+                    'canonical_form' => $canonicalForm->canonical_form,
+                    'anagram_count' => $canonicalForm->anagram_count,
+                    'words' => $words,
+                    'example_word' => $words[0] ?? '',
+                ];
+            }
+
+            return $results;
+        });
+    }
 }

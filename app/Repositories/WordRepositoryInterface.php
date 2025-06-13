@@ -50,7 +50,7 @@ interface WordRepositoryInterface
     public function wordExists(string $word): bool;
 
     /**
-     * Insert multiple words in batch for performance
+     * Get words with the most anagrams
      */
-    public function insertBatch(array $words): bool;
+    public function getWordsWithMostAnagrams(int $limit = 10): array;
 }

@@ -43,6 +43,40 @@ A sophisticated Laravel-based REST API for finding anagrams with advanced Unicod
 -   **Memory Usage**: <250MB during import
 -   **Query Performance**: O(1) lookups with composite indexes
 
+## 🏆 **Estonian Words with Most Anagrams**
+
+### **Top Winners (9 Anagrams Each)**
+
+**1. "kasarmu" group** (barracks/garrison)
+- **Words**: kasarmu, kumaras, masurka, murakas, raksuma, raskuma, ruskama, sakruma, surkama
+
+**2. "mustika" group** (blueberry)
+- **Words**: kitsuma, kutsima, mustika, mutikas, sitkuma, tiksuma, timukas, tuiskam, tuksima
+
+**3. "tasku" group** (pocket)
+- **Words**: aktus, katsu, katus, kaust, kutsa, skaut, stuka, takus, tasku
+
+### **8 Anagrams**
+
+**"teras" group** (steel)
+- **Words**: arest, arste, aster, ratse, reast, sater, taser, teras
+
+### **7 Anagrams Each**
+
+1. **"ratas" group** (wheel): raats, rasta, ratas, ratsa, staar, taras, tsaar
+2. **"rikas" group** (rich): irask, kirsa, raisk, rakis, raksi, rikas, sakri
+3. **"taksi" group** (taxi): astik, istak, kaits, kasti, katis, kitsa, taksi
+4. **"pila" group**: Alpi, Lapi, alpi, laip, lapi, pali, pila
+5. **"uksi" group**: kisu, kius, kuis, kusi, suik, uisk, uksi
+
+### **Notable 6-Anagram Groups**
+
+- **"amnestia" group**: amentsia, amnestia, enamasti, inestama, saatmine, sinetama
+- **"sulama" group**: alamus, lasuma, lusama, maalus, salamu, sulama
+- **"rake" group**: erak, kaer, kare, kera, krae, rake
+
+**Fun Fact**: The Estonian language's rich morphology and compound word formation creates these extensive anagram groups, with the winners being practical everyday words like "pocket" (tasku), "blueberry" (mustika), and "barracks" (kasarmu)!
+
 ## 🚀 Quick Start
 
 ### Prerequisites

@@ -205,4 +205,83 @@ class AnagramController extends Controller
 
         return $localized;
     }
+
+    /**
+     * Get words with the most anagrams
+     * 
+     * @OA\Get(
+     *     path="/api/v1/anagrams/top",
+     *     operationId="getTopAnagrams",
+     *     tags={"Anagrams"},
+     *     summary="Get words with the most anagrams",
+     *     description="Returns the words that have the most anagrams in the database",
+     *     @OA\Parameter(
+     *         name="limit",
+     *         in="query",
+     *         description="Maximum number of results to return",
+     *         required=false,
+     *         @OA\Schema(
+     *             type="integer",
+     *             minimum=1,
+     *             maximum=50,
+     *             default=10
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="array",
+     *                 @OA\Items(
+     *                     type="object",
+     *                     @OA\Property(property="canonical_form", type="string", example="ikno"),
+     *                     @OA\Property(property="anagram_count", type="integer", example=5),
+     *                     @OA\Property(property="words", type="array", @OA\Items(type="string"), example={"kino", "koni", "noki"}),
+     *                     @OA\Property(property="example_word", type="string", example="kino")
+     *                 )
+     *             )
+     *         )
+     *     )
+     * )
+     * 
+     * GET /api/v1/anagrams/top
+     */
+    public function top(Request $request): JsonResponse
+    {
+        try {
+            // Check if wordbase is ready
+            if (!$this->anagramService->isWordbaseReady()) {
+                return $this->errorResponse(
+                    'anagrams.not_ready', 
+                    'WORDBASE_NOT_READY', 
+                    503
+                );
+            }
+
+            // Validate limit parameter
+            $limit = $request->get('limit', 10);
+            $limit = max(1, min(50, (int) $limit)); // Ensure between 1 and 50
+
+            $topAnagrams = $this->anagramService->getWordsWithMostAnagrams($limit);
+
+            return $this->localizedResponse([
+                'data' => $topAnagrams,
+                'message' => 'Top anagram groups retrieved successfully'
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Failed to get top anagrams', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return $this->errorResponse(
+                'anagrams.processing_error', 
+                'INTERNAL_ERROR', 
+                500
+            );
+        }
+    }
 }

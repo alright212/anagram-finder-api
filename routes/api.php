@@ -33,6 +33,7 @@ Route::prefix('v1')->group(function () {
 
     // Anagram search routes
     Route::prefix('anagrams')->group(function () {
+        Route::get('top', [AnagramController::class, 'top'])->name('api.v1.anagrams.top');
         Route::get('stats', [AnagramController::class, 'stats'])->name('api.v1.anagrams.stats');
         Route::get('{word}', [AnagramController::class, 'show'])->name('api.v1.anagrams.show');
     });
