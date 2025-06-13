@@ -96,6 +96,9 @@ return [
             'importButton' => 'Wörter importieren',
             'placeholder' => 'Geben Sie zu importierende Wörter ein (eines pro Zeile für Textformat oder JSON-Array für JSON-Format)',
             'failed' => 'Import fehlgeschlagen',
+            'validation' => [
+                'wordsRequired' => 'Bitte geben Sie einige Wörter ein',
+            ],
         ],
         'formats' => [
             'plaintext' => 'Einfacher Text',
@@ -240,12 +243,17 @@ return [
     // UI-Elemente der Startseite
     'home' => [
         'statistics' => [
+            'title' => '🏆 Produktionsstatistik',
+            'estonianWords' => 'Estnische Wörter',
+            'avgResponse' => 'Durchschn. Antwort',
+            'unicodeSupport' => 'Unicode-Unterstützung',
+            'lookupTime' => 'Suchzeit',
             'totalWords' => 'Wörter insgesamt',
             'inDatabase' => 'in der Datenbank',
             'uniqueAnagrams' => 'Einzigartige Anagramme',
             'combinations' => 'Kombinationen',
-            'mostAnagrams' => 'Die meisten Anagramme',
-            'for' => 'für',
+            'mostAnagrams' => 'Meiste Anagramme',
+            'for' => 'für das Wort',
             'avgSearchTime' => 'Durchschn. Suchzeit',
             'perSearch' => 'pro Suche',
         ],

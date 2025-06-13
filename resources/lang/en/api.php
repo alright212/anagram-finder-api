@@ -96,6 +96,9 @@ return [
             'importButton' => 'Import Words',
             'placeholder' => 'Enter words to import (one per line for text format, or JSON array for JSON format)',
             'failed' => 'Import failed',
+            'validation' => [
+                'wordsRequired' => 'Please enter some words',
+            ],
         ],
         'formats' => [
             'plaintext' => 'Plain text',
@@ -240,12 +243,17 @@ return [
     // Home page UI elements
     'home' => [
         'statistics' => [
+            'title' => '🏆 Production Statistics',
+            'estonianWords' => 'Estonian Words',
+            'avgResponse' => 'Avg Response',
+            'unicodeSupport' => 'Unicode Support',
+            'lookupTime' => 'Lookup Time',
             'totalWords' => 'Total Words',
             'inDatabase' => 'in database',
             'uniqueAnagrams' => 'Unique Anagrams',
             'combinations' => 'combinations',
             'mostAnagrams' => 'Most Anagrams',
-            'for' => 'for',
+            'for' => 'for the word',
             'avgSearchTime' => 'Avg Search Time',
             'perSearch' => 'per search',
         ],

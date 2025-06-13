@@ -36,7 +36,7 @@ return [
         'title' => 'Anagrammi otsing',
         'description' => 'Sisesta eestikeelne sõna, et leida selle anagramme',
         'placeholder' => 'Sisesta sõna anagrammide leidmiseks...',
-        'searchButton' => 'Otsi Anagramme',
+        'searchButton' => 'Otsi anagramme',
         'noResults' => 'Anagramme ei leitud',
         'recentSearches' => 'Hiljutised otsingud',
         'results' => [
@@ -72,18 +72,18 @@ return [
         'totalWords' => 'Sõnu kokku: {{count}}',
         'lastImport' => 'Viimane import: {{date}}',
         'statusLabels' => [
-            'total_words' => 'Sõnu Kokku',
+            'total_words' => 'Sõnu kokku',
             'languages' => 'Keeled',
-            'last_updated' => 'Viimati Uuendatud',
+            'last_updated' => 'Viimati uuendatud',
         ],
         'import' => [
             'title' => 'Impordi sõnabaas',
             'description' => 'Impordi uusi sõnu sõnabaasi anagrammide genereerimiseks.',
             'instructions' => [
                 'title' => 'Impordi juhised',
-                'plain_text' => 'Lihtteksti Formaat: Sisesta üks sõna rea kohta',
-                'json_format' => 'JSON Formaat: Esita stringide massiiv nagu ["sõna1", "sõna2"]',
-                'language_selection' => 'Keele Valik: Vali sõnadele sobiv keel',
+                'plain_text' => 'Lihtteksti formaat: Sisesta üks sõna rea kohta',
+                'json_format' => 'JSON formaat: Esita stringide(sõnade) massiiv nagu ["sõna1", "sõna2"]',
+                'language_selection' => 'Keele valik: Vali sõnadele sobiv keel',
                 'duplicates' => 'Duplikaadid: Korduvad sõnad jäetakse automaatselt vahele',
                 'processing_time' => 'Töötlemisaeg: Suurte importide puhul võib kuluda mitu sekundit',
             ],
@@ -93,9 +93,12 @@ return [
             'content' => 'Sõnad (üks rea kohta)',
             'format' => 'Formaat',
             'language' => 'Keel',
-            'importButton' => 'Impordi Sõnad',
+            'importButton' => 'Impordi sõnad',
             'placeholder' => 'Sisesta imporditavad sõnad (tekstivormingus üks rea kohta või JSON-vormingus JSON-massiiv)',
             'failed' => 'Importimine ebaõnnestus',
+            'validation' => [
+                'wordsRequired' => 'Palun sisesta mõned sõnad',
+            ],
         ],
         'formats' => [
             'plaintext' => 'Lihttekst',
@@ -240,13 +243,18 @@ return [
     // Avalehe kasutajaliidese elemendid
     'home' => [
         'statistics' => [
-            'totalWords' => 'Sõnu Kokku',
+            'title' => '🏆 Statistika',
+            'estonianWords' => 'Eesti sõnad',
+            'avgResponse' => 'Keskmine vastus',
+            'unicodeSupport' => 'Unicode tugi',
+            'lookupTime' => 'Päringu kiirus',
+            'totalWords' => 'Sõnu kokku',
             'inDatabase' => 'andmebaasis',
-            'uniqueAnagrams' => 'Unikaalseid Anagramme',
+            'uniqueAnagrams' => 'Unikaalseid anagramme',
             'combinations' => 'kombinatsiooni',
-            'mostAnagrams' => 'Enim Anagramme',
+            'mostAnagrams' => 'Enim anagramme',
             'for' => 'sõnale',
-            'avgSearchTime' => 'Keskmine Otsingu Aeg',
+            'avgSearchTime' => 'Keskmine otsingu aeg',
             'perSearch' => 'otsingu kohta',
         ],
         'features' => [
@@ -254,14 +262,14 @@ return [
             'importDatabase' => 'Impordi oma sõnaloendeid otsinguandmebaasi kohandamiseks',
             'modernInterface' => 'Kaasaegne, reageeriv liides, mis on ehitatud Reacti ja Chakra UI-ga',
         ],
-        'readyToSearch' => 'Otsinguks Valmis!',
+        'readyToSearch' => 'Otsinguks valmis!',
         'databaseLoaded' => 'Sinu sõnade andmebaas on laetud {{count}} sõnaga. Alusta anagrammide leidmist kohe!',
-        'startSearching' => 'Alusta Otsingut',
+        'startSearching' => 'Alusta otsingut',
     ],
 
     // Jalus
     'footer' => [
-        'copyright' => '2025 Eesti Anagrammide Leidja. Tehtud ❤️-ga eesti keele jaoks.',
+        'copyright' => '2025 Eesti Anagrammide Leidja. Tehtud ❤️-ga eesti keele vastu.',
     ],
 
     // Anagrammi-spetsiifilised teated (API vastuste jaoks)
